@@ -18,7 +18,7 @@ Fill language-specific sections when you adopt this kit. Keep this file **genera
 - **Hard cap: 500 lines** per source module (soft target **300** when practical).
 - Applies to **every** language and stack this kit is copied into — no exceptions for “just one more helper.”
 - Split by **purpose** (e.g. surface vs build vs incremental), not arbitrary line chops.
-- A clear name beats a mega-mixin that “does charts.”
+- A clear name beats a mega-mixin that “does everything UI.”
 - Generated code / vendored third-party: exclude from the cap; **your** code is not exempt.
 
 ## OOP / state
@@ -35,7 +35,7 @@ Fill language-specific sections when you adopt this kit. Keep this file **genera
 
 - **INFO** (or your “story” level): user-recognizable outcomes.
 - **DEBUG**: construction / poll noise.
-- Optional **CODE** (or similar): start/end landmarks for work a human can map to the UI (tab, scale, refresh) with `elapsed_ms`.
+- Optional **CODE** (or similar): start/end landmarks for work a human can map to the UI (view, refresh, save) with `elapsed_ms`.
 - Do not demote real failures to WARN when the surface is broken.
 
 ## Tests

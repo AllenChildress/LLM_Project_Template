@@ -23,6 +23,7 @@ Portable entry point. **Copy into each app** and replace the architecture paragr
 | Surprises | [docs/Lessons_Learned.md](docs/Lessons_Learned.md) |
 | Vocabulary | [docs/Glossary.md](docs/Glossary.md) |
 | Kit spine | [Project.md](Project.md) |
+| Setup / install | [README.md](README.md) (Environment setup) |
 
 Run `git status` before editing. **Do not push** until the human explicitly asks.
 
@@ -43,7 +44,7 @@ Main session = orchestrator. Spawn specialists only for **large exclusive** work
 | Prompt mainly about… | Spawn (example) |
 |----------------------|-----------------|
 | Schema / SQL | `dba` |
-| UI / charts | `ui` |
+| UI / presentation | `ui` |
 | Tests | `tester` |
 | Domain meaning | `domain` |
 | External API | `integration` |

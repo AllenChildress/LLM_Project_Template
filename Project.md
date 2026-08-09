@@ -1,6 +1,6 @@
 # Project — staff kit spine
 
-**Purpose:** One file to drop into (or copy from) a new VS Code project so Grok Build and humans share the same expectations.
+**Purpose:** One file to drop into (or copy from) a new VS Code project so Grok Build and humans share the same expectations. Framework for robust application development — not product domain content.
 
 **How to use with an agent**
 
@@ -42,7 +42,7 @@ Copy answers under each line or reply in chat.
 | DB schema + migrations pattern | Y / N | See [docs/Database.md](docs/Database.md) |
 | Backup script pattern | Y / N | |
 | Recommended libraries list | Y / N | [docs/Libraries.md](docs/Libraries.md) |
-| Domain skills folder | Y / N | Trading, etc. |
+| Domain skills folder | Y / N | Product-specific playbooks |
 | Multi-agent specialists | Y / N | ui/dba/tester/… |
 
 ### Constraints
@@ -85,22 +85,42 @@ App-specific docs (schema, runbooks, product ADRs) stay **outside** this kit onc
 
 ---
 
-## Public sharing / meetup (careful)
+## Lightweight practices (solo / small team)
+
+Enough structure to stay reliable — not a process theater.
+
+| Practice | Why |
+|----------|-----|
+| **Main stays shippable** | Land work on short-lived branches (or sequential commits on solo work); avoid long-lived “mystery” branches. |
+| **Definition of done** | Behavior works · relevant test · Change_Log/ToDo if user-visible · secrets still out of git. |
+| **Read your own diff** | Before commit: `git status` + diff; agents still need a human sanity check. |
+| **Lock dependencies** | Commit `requirements.txt` or lockfile; recreate envs from the file, not “whatever was on the machine.” |
+| **One config story** | `.env` / env vars for secrets and local paths; document required keys in `.env.example` (no values that matter). |
+| **Backup before destructive DB** | `pg_dump` (or equivalent) before migrations that drop or rewrite data. |
+| **Keep AGENTS architecture current** | One paragraph that matches the real stack beats a stale essay. |
+| **Multi-agent only when it pays** | Tiny fixes stay on main agent; spawn specialists for large exclusive trees (schema vs UI vs tests). |
+| **Handoff note** | Short: what changed · how to verify · push status (local until asked). |
+
+Skip formal sprint ceremony, mandatory PR templates, and multi-page ADRs until the team or risk actually needs them.
+
+---
+
+## Public sharing / demos (careful)
 
 | Usually OK | Avoid |
 |------------|--------|
 | Staff kit (this repo) | Secrets, tokens, `.env` |
-| Generic chart / options UI demos | **Account History / statement / balances** screenshots |
-| Architecture diagrams | Account numbers, last-4, tax lots in cleartext |
-| Redacted process docs | Full personal Change_Log dumps |
+| Generic UI / architecture demos | Live production data, PII, credentials |
+| Architecture diagrams | Account numbers, emails, API keys in cleartext |
+| Redacted process docs | Full personal Change_Log dumps with private detail |
 
-Charts and options screens can still leak **trade overlays** — crop or use a throwaway watchlist when presenting.
+Crop screenshots that show private identifiers. Prefer sample or synthetic data when presenting.
 
 ---
 
 ## Meetup talk track (optional agenda)
 
-Use this kit as the demo spine (not Stock_Data internals).
+Use this kit as the demo spine (not a specific product’s internals).
 
 1. Grok Build in VS Code + GitHub  
 2. Skill / staff files: AGENTS, PROCESS, Coding_Standards  
@@ -110,9 +130,9 @@ Use this kit as the demo spine (not Stock_Data internals).
 6. Database (schema, migrations, backups) — if included  
 7. Data model (session-style ownership over map sprawl) — if applicable  
 8. UI patterns (tabs, status, refresh, log) — if applicable  
-9. Performance (caching, honest limits of chart stacks)  
+9. Performance (caching, honest limits of UI stacks)  
 10. Self-assessment prompts (prompts on *prompts* and on *Change_Log*)  
-11. Parallel work (agents + Python threads — different tools)  
+11. Parallel work (agents + language threads — different tools)  
 12. Cost / ROI (fill your own numbers)
 
 ---
@@ -132,8 +152,8 @@ Use this kit as the demo spine (not Stock_Data internals).
 | Layer | Role | Example |
 |-------|------|---------|
 | **Base (this kit)** | Portable process | “Always keep a Change_Log” |
-| **Subclass (app)** | Product instance | Stock_Data’s 500+ Change_Log rows, Schwab runbook |
-| **Do not** | Merge product secrets into the kit | Tokens, account last-4, broker quirks |
+| **Subclass (app)** | Product instance | App’s long Change_Log, deploy runbook, domain skills |
+| **Do not** | Merge product secrets into the kit | Tokens, customer data, vendor quirks |
 
 When the app learns a **general** lesson, promote a short rule into this kit. When the lesson is **domain-only**, keep it in the app (or `docs/skills/Domain/`).
 
@@ -147,7 +167,7 @@ I answered intake as follows:
   <paste answers>
 
 Implement the staff kit for this repository:
-- Keep files portable (no personal secrets, no trading-specific content).
+- Keep files portable (no personal secrets, no product-domain content).
 - Skip modules I set to N.
 - Fill placeholders; leave TODO comments where I must supply product names.
 - Add one Change_Log entry for this bootstrap.

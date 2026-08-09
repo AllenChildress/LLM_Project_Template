@@ -1,30 +1,74 @@
 # Project_Template — staff kit (portable)
 
-A **generic** VS Code / Grok Build starter kit: process, agents, docs hygiene, testing layout, and logging norms you can copy into any Python project.
+A **generic** VS Code / Grok Build starter kit: process, agents, docs hygiene, testing layout, and logging norms you can copy into any application project.
 
-**Not** application code. **Not** trading or Stock_Data product docs.
+**Not** application code. A solid framework for robust development — solo or small team.
 
 | Audience | Use |
 |----------|-----|
 | **You** | Clone/copy into a new repo; answer intake in [Project.md](Project.md); fill stubs. |
-| **Meetup** | Share this kit as “how I run agent-assisted projects.” |
+| **Small team / meetup** | Share as “how we run agent-assisted projects.” |
 | **Grok Build** | Open *this* folder as the workspace to edit the kit without polluting app repos. |
 
 ## Quick start
 
 1. Copy this folder (or clone) as the start of a new project **or** merge selected files into an existing repo.
-2. Open the folder in VS Code + Grok Build.
-3. Read **[Project.md](Project.md)** — answer the intake questions (or paste them to the agent).
-4. Agent implements from the stubs under `docs/` and root `AGENTS.md`.
-5. Replace placeholders (`YOUR_APP`, `YOUR_NAME`) and delete sections you declined in intake.
+2. Install tools and extensions (see **[Environment setup](#environment-setup)** below).
+3. Open the folder in VS Code + Grok Build.
+4. Read **[Project.md](Project.md)** — answer the intake questions (or paste them to the agent).
+5. Agent implements from the stubs under `docs/` and root `AGENTS.md`.
+6. Replace placeholders (`YOUR_APP`, `YOUR_NAME`) and delete sections you declined in intake.
+
+## Environment setup
+
+### Core tools
+
+| Tool | Install |
+|------|---------|
+| **Visual Studio Code** | [code.visualstudio.com](https://code.visualstudio.com/) |
+| **Python 3.11+** (3.12 preferred) | [python.org/downloads](https://www.python.org/downloads/) — check “Add python.exe to PATH” on Windows |
+| **Git** | [git-scm.com](https://git-scm.com/downloads) |
+| **PostgreSQL** (if your app needs a server DB) | [postgresql.org/download](https://www.postgresql.org/download/) — [Windows installers](https://www.postgresql.org/download/windows/) · [macOS](https://www.postgresql.org/download/macosx/) · [Linux](https://www.postgresql.org/download/linux/) |
+| **Grok Build (CLI)** | Official install: `curl -fsSL https://x.ai/cli/install.sh \| bash` — announcement: [Introducing Grok Build](https://x.ai/news/grok-build-cli). SuperGrok or X Premium Plus. On Windows, use a terminal that supports the installer, or follow xAI’s current platform notes after install. |
+
+Python libraries for a given app go in that app’s `requirements.txt` / `pyproject.toml` after [Project.md](Project.md) intake. See [docs/Libraries.md](docs/Libraries.md) for a starter menu (`pip install …` or `uv` / Poetry). Never commit `.env`.
+
+### VS Code / Cursor extensions
+
+Open **Extensions** (`Ctrl+Shift+X` / `Cmd+Shift+X`), search by name, or use the Marketplace links. This repo also ships [`.vscode/extensions.json`](.vscode/extensions.json) so VS Code can prompt you to install recommendations.
+
+| Extension | Why | Marketplace |
+|-----------|-----|-------------|
+| **Grok Build for VS Code (Community)** | Sidebar UI over the Grok Build CLI | [PawelHuryn.grok-vscode-phuryn](https://marketplace.visualstudio.com/items?itemName=PawelHuryn.grok-vscode-phuryn) |
+| **PowerShell** | Integrated terminal scripting on Windows | [ms-vscode.PowerShell](https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell) |
+| **Python** | Language support, run/test integration | [ms-python.python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) |
+| **Python Debugger** | Breakpoints, step-through (`debugpy`) | [ms-python.debugpy](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy) |
+| **Python Environments** | Create / switch envs and packages | [ms-python.vscode-python-envs](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-python-envs) |
+| **TODO.md Kanban Board** | Visual board backed by a portable `TODO.md` | [coddx.coddx-alpha](https://marketplace.visualstudio.com/items?itemName=coddx.coddx-alpha) |
+
+**Command-line install (optional):**
+
+```powershell
+code --install-extension PawelHuryn.grok-vscode-phuryn
+code --install-extension ms-vscode.PowerShell
+code --install-extension ms-python.python
+code --install-extension ms-python.debugpy
+code --install-extension ms-python.vscode-python-envs
+code --install-extension coddx.coddx-alpha
+```
+
+After installing Grok Build (CLI and/or extension), open this folder as the workspace and complete sign-in when prompted.
+
+Postgres wiring after install: [docs/Database.md](docs/Database.md).
 
 ## Layout
 
 ```text
 Project_Template/
   README.md                 # this file
-  Project.md                # intake + skeleton + talk track
+  Project.md                # intake + skeleton + light practices
   AGENTS.md                 # short agent entry (main thread)
+  .vscode/extensions.json   # recommended extensions
   docs/
     PROCESS.md              # how work is done
     Coding_Standards.md     # style, errors, **500-line hard cap**
@@ -53,11 +97,11 @@ Project_Template/
 |------|------------|--------|
 | **Staff kit** | How *any* project is run with humans + agents | This template (copy into each app) |
 | **Skills** | Playbooks you paste/attach for a *task* (often domain) | `docs/skills/…` |
-| **App docs** | This product’s Change_Log, schema, runbooks | App repo only (e.g. Stock_Data) |
+| **App docs** | This product’s Change_Log, schema, runbooks | App repo only |
 
-## Relationship to Stock_Data
+## Improve the kit, then promote
 
-Stock_Data is a **worked example**, not the kit. Keep product docs there. Improve the kit here, then copy improvements into apps when ready.
+Keep product-specific docs in the **app** repo. Improve portable process **here**, then copy improvements into apps when ready.
 
 ## License / sharing
 

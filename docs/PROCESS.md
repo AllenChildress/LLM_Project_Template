@@ -50,3 +50,7 @@ New behavior → at least unit unless the only risk is shell-level.
 ## Handoff to human
 
 Short: what changed · files · how to verify · docs · push status (local until asked).
+
+## Solo / small team (keep light)
+
+See [Project.md](../Project.md) § Lightweight practices. In short: shippable main, read your own diff, lock dependencies, update ToDo/Change_Log with the code, multi-agent only when the work tree is large and exclusive.

@@ -12,6 +12,7 @@ Working backlog. Keep **Done ✓** as the last section (or use your Kanban tool�
 
 - [ ] Nested AGENTS.md per major package (if multi-module)
 - [ ] Domain skills under `docs/skills/Domain/` (if needed)
+- [ ] App-level README run instructions once the product boots
 
 ## Done ✓
 

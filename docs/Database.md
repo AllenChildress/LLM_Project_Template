@@ -6,12 +6,10 @@
 |----------|--------------|-----|
 | Multi-user app, migrations, integrity, concurrent writers | **PostgreSQL** | Mature, free, excellent tooling, strong SQL |
 | Local single-user tool, simple storage | **SQLite** | Zero server, one file |
-| Heavy **time-series** (bars, metrics every minute, retention) | **Postgres + TimescaleDB** (or similar) | Hypertables, compression, time-oriented queries |
+| Heavy **time-series** (metrics, events, retention windows) | **Postgres + TimescaleDB** (or similar) | Hypertables, compression, time-oriented queries |
 | Huge analytics warehouse | Often **not** OLTP Postgres alone | Consider warehouse tools later |
 
-**Stock_Data chose Postgres/Timescale** because equities bars + analytics are time-series at volume, with multi-scale materialize and retention. That is **not** a claim that every Python app needs Timescale.
-
-**Generic rule:** start with **Postgres** if you need a real server DB; start with **SQLite** if you need “no install.” Add Timescale only when time-series workload justifies it.
+**Generic rule:** start with **Postgres** if you need a real server DB; start with **SQLite** if you need “no install.” Add Timescale (or another time-series extension) only when the workload justifies it.
 
 ---
 
@@ -24,9 +22,11 @@
 
 ---
 
-## PostgreSQL — install & wire (Windows sketch)
+## PostgreSQL — install & wire
 
-1. Install Postgres (installer or package manager). Note port (default **5432**), superuser password.
+**Installers:** [postgresql.org/download](https://www.postgresql.org/download/) — [Windows](https://www.postgresql.org/download/windows/) · [macOS](https://www.postgresql.org/download/macosx/) · [Linux](https://www.postgresql.org/download/linux/)
+
+1. Install Postgres. Note port (default **5432**) and superuser password; store the password outside git.
 2. Create a role + database for the app (not superuser for daily use).
 3. App `.env` (never commit):
 
@@ -41,12 +41,12 @@ POSTGRES_PASSWORD=...
 
 4. Python: `pip install psycopg[binary]` (or poetry/uv equivalent).
 5. Schema: keep SQL under `db/` or `src/.../sql/` with a version note; apply via script or migration tool.
-6. Backup: `pg_dump` on a schedule before destructive migrations.
+6. Backup: `pg_dump` on a schedule and before destructive migrations.
 
 ### Optional TimescaleDB
 
-- Install Timescale extension into the same Postgres instance.
-- Use for hypertables on time + symbol style data — only if intake says time-series heavy.
+- Install the Timescale extension into the same Postgres instance when intake says time-series heavy.
+- Use hypertables on time + entity keys only if retention/volume warrants it.
 
 ---
 
@@ -73,4 +73,4 @@ Add a short `docs/Database_<Engine>.md` only when chosen — keep this file as t
 ## Schema / UI inventory (optional later)
 
 - Versioned DDL + Change_Log when schema changes.
-- Optional admin UI tab listing tables/row counts (app-specific).
+- Optional admin UI listing tables/row counts (app-specific).

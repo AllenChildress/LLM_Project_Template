@@ -2,6 +2,18 @@
 
 Pick by product needs (see [Project.md](../Project.md) intake). This is a **starter menu**, not a mandate.
 
+Install into a project virtual environment after Python is installed ([python.org/downloads](https://www.python.org/downloads/)):
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1   # Windows PowerShell
+pip install -U pip
+pip install pytest python-dotenv requests pydantic
+# add drivers / UI stacks from the tables below as needed
+```
+
+Pin versions in `requirements.txt` or `pyproject.toml` for the app — recreate envs from that file.
+
 ## Core (most Python apps)
 
 | Library | Why |
@@ -32,7 +44,6 @@ Pick by product needs (see [Project.md](../Project.md) intake). This is a **star
 |---------|-----|
 | **pandas** | Tables, time series, joins |
 | **numpy** | Numeric arrays |
-| **pandas-ta** or **ta-lib** | Technical indicators (trading-ish apps) |
 
 ## Database drivers
 
@@ -40,7 +51,7 @@ Pick by product needs (see [Project.md](../Project.md) intake). This is a **star
 |--------|----------------|
 | **PostgreSQL** | `psycopg` (v3) — general default for multi-user apps |
 | **SQLite** | stdlib `sqlite3` — single-user, local, simple |
-| **TimescaleDB** | Postgres extension — **time-series / bars / IoT** (see [Database.md](Database.md)) |
+| **TimescaleDB** | Postgres extension — time-series / metrics / events (see [Database.md](Database.md)) |
 
 ## Do not commit
 

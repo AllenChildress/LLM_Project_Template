@@ -5,8 +5,8 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 | Term | Meaning |
 |------|---------|
 | **Staff kit** | Portable process pack: AGENTS, PROCESS, Coding_Standards, Change_Log/ToDo/Lessons norms, test layout — first-class in git, updated with code. |
-| **cache_key** | Structured identity for a data slice (e.g. tuple of symbol/scale/range). Not a UI page string. |
-| **page_key** | Path-safe string identity for a UI page/document/slot (if the app has one). Prefer over vague “slug” for chart/page caches. |
+| **cache_key** | Structured identity for a data slice (e.g. tuple of entity / range / version). Not a UI page string. |
+| **page_key** | Path-safe string identity for a UI page/document/slot (if the app has one). Prefer over vague “slug” for view caches. |
 | **Mixin** | Small class that contributes one behavior slice via composition/inheritance — not a god window. |
 | **Smoke test** | Minimal “system still boots / critical path alive” check. |
 | **Unit test** | Fast, isolated logic test. |
@@ -29,4 +29,4 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 
 See [Libraries.md](Libraries.md) for a fuller menu and [Database.md](Database.md) for Postgres vs SQLite vs Timescale.
 
-Delete unused rows; never leave secrets or personal account data here.
+Delete unused rows; never leave secrets or personal data here.

@@ -10,7 +10,7 @@ Durable scars. Prefer **short rules** over novels.
 
 ## Domain / product
 
-_(Move trading, broker, or product-specific lessons here or into the app repo.)_
+_(Move product- or domain-specific lessons here or into the app repo — keep this kit portable.)_
 
 ## Environment
 
