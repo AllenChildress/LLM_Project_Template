@@ -39,8 +39,9 @@ Copy answers under each line or reply in chat.
 | tests unit/integration/smoke | Y / N | |
 | pytest + suite script later | Y / N | |
 | Screenshot smoke (UI apps) | Y / N | |
-| DB schema + migrations pattern | Y / N | |
+| DB schema + migrations pattern | Y / N | See [docs/Database.md](docs/Database.md) |
 | Backup script pattern | Y / N | |
+| Recommended libraries list | Y / N | [docs/Libraries.md](docs/Libraries.md) |
 | Domain skills folder | Y / N | Trading, etc. |
 | Multi-agent specialists | Y / N | ui/dba/tester/… |
 
@@ -81,6 +82,19 @@ App-specific docs (schema, runbooks, product ADRs) stay **outside** this kit onc
 5. **Tests:** new behavior → unit first; cross-layer → integration; UI shell → smoke.
 6. **Secrets:** never commit `.env`, tokens, dumps.
 7. **Generic vs specific:** kit files stay portable; product truth lives in the app repo.
+
+---
+
+## Public sharing / meetup (careful)
+
+| Usually OK | Avoid |
+|------------|--------|
+| Staff kit (this repo) | Secrets, tokens, `.env` |
+| Generic chart / options UI demos | **Account History / statement / balances** screenshots |
+| Architecture diagrams | Account numbers, last-4, tax lots in cleartext |
+| Redacted process docs | Full personal Change_Log dumps |
+
+Charts and options screens can still leak **trade overlays** — crop or use a throwaway watchlist when presenting.
 
 ---
 

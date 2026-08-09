@@ -27,9 +27,11 @@ Project_Template/
   AGENTS.md                 # short agent entry (main thread)
   docs/
     PROCESS.md              # how work is done
-    Coding_Standards.md     # style, errors, module size
+    Coding_Standards.md     # style, errors, **500-line hard cap**
     Change_Log.md           # user-visible history template
-    Glossary.md             # shared vocabulary (start empty-ish)
+    Glossary.md             # shared vocabulary + common libraries
+    Libraries.md            # recommended Python library menu
+    Database.md             # Postgres vs SQLite vs Timescale; install sketch
     ToDo.md                 # backlog / Done
     Lessons_Learned.md      # durable scars (general section first)
     Taste.md                # judgment / “who is the computer”

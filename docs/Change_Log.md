@@ -25,6 +25,13 @@ Prefer a **vertical list** (not a wide table) so Markdown Preview stays readable
 
 ## Entries (newest first)
 
+### 2026-08-08 — Libraries + Database stubs; hard 500-line rule
+
+- **Files:** Libraries.md, Database.md, Glossary.md, Coding_Standards.md, Project.md, README.md
+- **Why:** Kit needed library menu, Postgres guidance, and absolute module-size rule.
+- **What:** Libraries + Database decision tree (Postgres vs SQLite vs Timescale); Glossary library table; **500-line hard cap** (300 soft target); meetup share caution for History screenshots.
+- **Benefit:** Improve code hygiene / documentation
+
 ### YYYY-MM-DD — Staff kit bootstrap
 
 - **Files:** AGENTS.md, docs/*, Project.md, tests/README.md

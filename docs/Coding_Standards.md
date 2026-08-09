@@ -13,11 +13,13 @@ Fill language-specific sections when you adopt this kit. Keep this file **genera
 - Prefer one place to map external failures → user-safe messages.
 - Log detail for operators; never log secrets (tokens, passwords, full auth headers).
 
-## Module size
+## Module size (hard rule — all projects, all languages)
 
-- Prefer **under ~500 lines** per module when a file has multiple responsibilities.
+- **Hard cap: 500 lines** per source module (soft target **300** when practical).
+- Applies to **every** language and stack this kit is copied into — no exceptions for “just one more helper.”
 - Split by **purpose** (e.g. surface vs build vs incremental), not arbitrary line chops.
 - A clear name beats a mega-mixin that “does charts.”
+- Generated code / vendored third-party: exclude from the cap; **your** code is not exempt.
 
 ## OOP / state
 

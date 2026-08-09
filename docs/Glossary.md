@@ -14,4 +14,19 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 | **Change_Log** | User-visible history (Why / What / Benefit). |
 | **ToDo** | Backlog; finished work leaves open columns. |
 
+## Libraries (common Python)
+
+| Library | Role |
+|---------|------|
+| **pytest** | Test runner |
+| **python-dotenv** | Load `.env` into process env |
+| **psycopg** | PostgreSQL driver (v3) |
+| **pandas** | DataFrames / tabular analysis |
+| **numpy** | Arrays / numeric core under pandas |
+| **PyQt6** | Desktop UI (if desktop app) |
+| **requests** / **httpx** | HTTP clients |
+| **pydantic** | Validated models / settings |
+
+See [Libraries.md](Libraries.md) for a fuller menu and [Database.md](Database.md) for Postgres vs SQLite vs Timescale.
+
 Delete unused rows; never leave secrets or personal account data here.
