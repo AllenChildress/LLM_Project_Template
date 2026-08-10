@@ -50,5 +50,5 @@ Prefer a **vertical list** (not a wide table) so Markdown Preview stays readable
 
 - **Files:** AGENTS.md, docs/*, Project.md, tests/README.md
 - **Why:** Establish portable process for agents and humans.
-- **What:** Copied Project_Template staff kit; filled intake placeholders as needed.
+- **What:** Copied LLM_Project_Template staff kit; filled intake placeholders as needed.
 - **Benefit:** Improve code hygiene / documentation

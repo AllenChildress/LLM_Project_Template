@@ -1,4 +1,4 @@
-# Project_Template — staff kit (portable)
+# LLM_Project_Template — staff kit (portable)
 
 A **generic** VS Code / Grok Build starter kit: process, agents, docs hygiene, testing layout, and logging norms you can copy into any application project.
 
@@ -64,7 +64,7 @@ Postgres wiring after install: [docs/Database.md](docs/Database.md).
 ## Layout
 
 ```text
-Project_Template/
+LLM_Project_Template/
   README.md                 # this file
   Project.md                # intake + skeleton + light practices
   AGENTS.md                 # short agent entry (main thread)

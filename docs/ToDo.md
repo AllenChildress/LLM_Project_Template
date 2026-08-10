@@ -16,4 +16,4 @@ Working backlog. Keep **Done ✓** as the last section (or use your Kanban tool�
 
 ## Done ✓
 
-- [x] Staff kit bootstrap from Project_Template
+- [x] Staff kit bootstrap from LLM_Project_Template
