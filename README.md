@@ -79,10 +79,15 @@ LLM_Project_Template/
     ToDo.md                 # backlog / Done
     Lessons_Learned.md      # durable scars (general section first)
     Taste.md                # judgment / “who is the computer”
+    changelog_shots/        # tracked JPEG thumbs for Change_Log
     skills/
       README.md             # what belongs in skills vs docs
       General/              # portable playbooks
       Domain/               # empty — project-specific skills later
+  scripts/
+    README.md               # helpers (Change_Log thumbs, …)
+    promote_changelog_shot.py
+    capture_changelog_tabs.py  # stub — bind to your UI
   tests/
     README.md               # unit / integration / smoke
     unit/

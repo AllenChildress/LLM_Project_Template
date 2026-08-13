@@ -14,6 +14,30 @@ How humans and agents work on **any** project that uses this staff kit.
 For user-visible behavior: add a row with **Why** / **What** / **Benefit**.  
 Prefer a vertical list (heading + bullets) if wide tables break your preview tool.
 
+### Screenshots (each push that paints a view)
+
+Goal: a visible **progression** of the UI, not a dump of error captures.
+
+**When required:** the change altered what a user sees (window, tab, pane, chrome). Docs-only, schema-only, and headless work skip this.
+
+**Same series as the code:**
+
+1. Run the app (or a smoke shell if chrome-only).
+2. Open **each modified view**. Wait until paint is real — not a spinner or blank pane.
+3. Capture the window. Raw dumps go to a **gitignored** folder (typical: `data/Graphics/Screenshots/`).
+4. Promote a tracked JPEG thumb:
+   ```powershell
+   python scripts/promote_changelog_shot.py --tab main --source "data/Graphics/Screenshots/<file>.png"
+   ```
+   Replace `--tab` slugs with your app’s views (`main`, `settings`, `log`, `shell`, …).
+5. Paste the printed `- **Shot:** <img …>` line on that Change_Log entry. Add the thumb to the **UI progression** strip at the top of Change_Log when it is a real step (new view, new overlay, new layout).
+6. **Do not** promote `error_*` / `*_fail_*` dumps. Those stay local diagnostics.
+7. Views that show **PII, account numbers, or money** need `--allow-sensitive` (privacy mode or crop first). Prefer non-sensitive views for the public strip.
+
+Thumbs live in `docs/changelog_shots/` (tracked, JPEG, max width 900). Runtime PNGs stay gitignored.
+
+Apps with a desktop shell should also keep a `scripts/capture_changelog_tabs.py` that boots the UI, waits for paint, and grabs each requested tab. The copy in this kit is a **stub** — bind it to your window.
+
 ## ToDo
 
 - Open work in backlog columns.
@@ -46,6 +70,8 @@ New behavior → at least unit unless the only risk is shell-level.
 - Versioned SQL or migration tool of choice.
 - Document apply order in a short runbook.
 - Backup before destructive migrations.
+- **SQL text lives in files** (Coding_Standards § SQL lives in files): multi-line queries and DDL are `.sql` (or migration files), not string literals in app code. The DBA / database lane owns the statement text; app code loads and runs it.
+- Same change series: delta/migration + embedded/schema SQL the app applies + docs (Schema / runbook) when the live schema moves.
 
 ## Handoff to human
 

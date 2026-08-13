@@ -33,6 +33,7 @@ Run `git status` before editing. **Do not push** until the human explicitly asks
 - Centralize errors; redact secrets in logs.
 - Rule of Three before extracting shared helpers.
 - Prefer domain/session objects over new parallel maps.
+- **Multi-line SQL in `.sql` files** (DBA/schema lane owns text); app code loads/runs — see Coding_Standards.
 - Tests under `tests/{unit,integration,smoke}/`.
 - Docs hygiene with the code: Change_Log / ToDo / Lessons when PROCESS requires it.
 - Commits: clear subject; optional trailers `Assisted-by: Grok Build`.
@@ -63,6 +64,7 @@ First line of each user-visible reply: `main:` or specialist name (`ui:`, `dba:`
 | Question | Action |
 |----------|--------|
 | User-visible change? | Change_Log row (Why / What / Benefit) |
+| User-visible **view paint**? | Run the app, screenshot each modified view, `python scripts/promote_changelog_shot.py`, add **Shot:** — PROCESS § Screenshots |
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
 | Non-obvious fix? | Lessons_Learned |

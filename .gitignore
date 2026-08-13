@@ -32,3 +32,6 @@ Thumbs.db
 # Local overrides
 *.local.json
 *.local.yaml
+
+# Runtime screenshot dumps (tracked thumbs live in docs/changelog_shots/)
+data/Graphics/Screenshots/

@@ -76,7 +76,7 @@ App-specific docs (schema, runbooks, product ADRs) stay **outside** this kit onc
 ## Skeleton rules (agent implements)
 
 1. **Never load the whole docs set** into context — open only files named by AGENTS / task.
-2. **One Change_Log entry per user-visible change** (Why / What / Benefit).
+2. **One Change_Log entry per user-visible change** (Why / What / Benefit). If a view/tab paint changed, add **Shot:** (PROCESS § Screenshots).
 3. **ToDo** updated when backlog items complete or cancel.
 4. **Module size:** prefer files under ~500 lines; split by purpose (not arbitrary chops).
 5. **Tests:** new behavior → unit first; cross-layer → integration; UI shell → smoke.

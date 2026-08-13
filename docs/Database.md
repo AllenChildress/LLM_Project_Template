@@ -41,7 +41,8 @@ POSTGRES_PASSWORD=...
 
 4. Python: `pip install psycopg[binary]` (or poetry/uv equivalent).
 5. Schema: keep SQL under `db/` or `src/.../sql/` with a version note; apply via script or migration tool.
-6. Backup: `pg_dump` on a schedule and before destructive migrations.
+6. **Query text:** multi-line SELECT/INSERT/upsert/report SQL also lives in those `.sql` files (load by name). Do not bury full statements as string literals in stores or UI — see Coding_Standards § SQL lives in files.
+7. Backup: `pg_dump` on a schedule and before destructive migrations.
 
 ### Optional TimescaleDB
 
@@ -73,4 +74,4 @@ Add a short `docs/Database_<Engine>.md` only when chosen — keep this file as t
 ## Schema / UI inventory (optional later)
 
 - Versioned DDL + Change_Log when schema changes.
-- Optional admin UI listing tables/row counts (app-specific).
+- Optional admin UI listing tables/row counts (app-specific). If you build one, name it for **inventory / data report**, not ambiguous “health,” unless medical is the product domain.

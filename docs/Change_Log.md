@@ -6,6 +6,25 @@ Each entry: **date**, optional time, **files**, short title, then **Why** / **Wh
 
 Prefer a **vertical list** (not a wide table) so Markdown Preview stays readable.
 
+| Field | Role |
+|-------|------|
+| **Files** | Paths or short module names touched |
+| **Why** | Problem or product need |
+| **What** | What shipped (concrete) |
+| **Benefit** | Short user/dev outcome |
+| **Shot** | Required when a **view or chrome paint** changed — HTML thumbnail from [changelog_shots/](changelog_shots/) (see PROCESS § Screenshots) |
+
+**Shot:** use the HTML thumbnail `scripts/promote_changelog_shot.py` prints (width 360). Do not embed full-size PNGs or error dumps.
+
+### UI progression (curated)
+
+Newest real UI steps, oldest last. Same image may also appear on the dated **Shot:** row — that is intentional.
+
+<!-- Add promoted thumbs here, newest first. Example:
+- YYYY-MM-DD Main window  
+  <img src="changelog_shots/YYYY-MM-DD_main.jpg" width="360" alt="YYYY-MM-DD main">
+-->
+
 ## Benefit vocabulary (optional)
 
 - Bug fix  
@@ -24,6 +43,27 @@ Prefer a **vertical list** (not a wide table) so Markdown Preview stays readable
 ---
 
 ## Entries (newest first)
+
+### 2026-08-13 — Change_Log screenshot thumbs (portable)
+
+- **Files:** `docs/PROCESS.md`, `docs/Change_Log.md`, `AGENTS.md`, `scripts/promote_changelog_shot.py`, `scripts/capture_changelog_tabs.py`, `docs/changelog_shots/`, `tests/unit/test_promote_changelog_shot.py`
+- **Why:** User-visible UI changes need a tracked progression, not only prose. Error dumps must stay out of git.
+- **What:** PROCESS + Change_Log **Shot:** rule; promote script writes `docs/changelog_shots/*.jpg`; capture script is an app-bound stub. Sensitive views require `--allow-sensitive`.
+- **Benefit:** Improve code hygiene / documentation
+
+### 2026-08-10 — Rule of Three for literals; SQL one-liners; standards why
+
+- **Files:** Coding_Standards.md, Lessons_Learned.md
+- **Why:** Agents skip literal centralization and leave one-liner SQL in source; kit readers need to know standards are forced checklist items.
+- **What:** Rule of Three table (fourth copy → nearest constant); SQL-in-files includes one-liners; loader safety + INFO load log called out. Lessons: Coding_Standards entries exist because Grok Build (and other LLMs) don’t apply them by default.
+- **Benefit:** Improve code hygiene / documentation
+
+### 2026-08-10 — SQL lives in files; cohesion pairs; process/DBA ownership
+
+- **Files:** Coding_Standards.md, PROCESS.md, Database.md, AGENTS.md
+- **Why:** Query text buried in app string literals blocks DBA review and duplicates migration discipline; portable kit should require the same fence as mature apps.
+- **What:** Hard rule — multi-line SQL in `.sql` (or migration) files; DBA/schema lane owns statement text; app loads/runs. Cohesion pairs (SQL + loader). PROCESS migrations + Database wire steps aligned. Naming note: prefer inventory/report names over overloaded “health.”
+- **Benefit:** Improve maintainability / Reduce technical debt / Improve code hygiene / documentation
 
 ### 2026-08-09 — Taste: Dijkstra / Northrop quotes
 
