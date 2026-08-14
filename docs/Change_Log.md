@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-08-14 — New chat session owns a topic branch
+
+- **Files:** `AGENTS.md`
+- **Why:** Parallel chats on `main` mix hunks. Spawned specialists must not each grow a branch.
+- **What:** Session start: purple multi-pick for `wip/<topic>` (Recommended + Stay on current branch + built-in Other) before the first edit. Subagents stay on the parent branch. Warn if other WIP would ride along; prefer a worktree when two chats share a folder.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-08-13 — Change_Log screenshot thumbs (portable)
 
 - **Files:** `docs/PROCESS.md`, `docs/Change_Log.md`, `AGENTS.md`, `scripts/promote_changelog_shot.py`, `scripts/capture_changelog_tabs.py`, `docs/changelog_shots/`, `tests/unit/test_promote_changelog_shot.py`
