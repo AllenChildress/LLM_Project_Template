@@ -13,6 +13,7 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 | **Integration test** | Cross-module; may use local services. |
 | **Change_Log** | User-visible history (Why / What / Benefit). |
 | **ToDo** | Backlog; finished work leaves open columns. |
+| **Worktree** | A second **folder** of the same git repo, each with its own checked-out branch. Two Grok chats need two folders or they share one checkout. |
 
 ## Libraries (common Python)
 

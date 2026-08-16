@@ -44,6 +44,27 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-08-16 — Session wrap-up returns the shared folder to main
+
+- **Files:** `AGENTS.md`, `docs/PROCESS.md`, `docs/Lessons_Learned.md`, `docs/Glossary.md`
+- **Why:** `git worktree add` without a start-point inherits this folder’s HEAD. Pushing a topic branch does not move any folder back to `main`.
+- **What:** Always pass `main` to `worktree add`. After a **This folder** session, `git checkout main` (checkout ≠ merge). PROCESS wrap-up table.
+- **Benefit:** Improve code hygiene / documentation
+
+### 2026-08-15 — Lessons: Grok multi-session
+
+- **Files:** `docs/Lessons_Learned.md`
+- **Why:** A “harmless” second chat that only `checkout -b` in the same folder can mix WIP and block a push. Two chats also cannot DM each other.
+- **What:** New **Grok multi-session** category: branch ≠ folder, no inter-session backchannel, sibling worktree then open the chat there, `git worktree remove` when done.
+- **Benefit:** Improve code hygiene / documentation
+
+### 2026-08-15 — New session = branch + sibling folder
+
+- **Files:** `AGENTS.md`, `docs/PROCESS.md`, `docs/Lessons_Learned.md`, `docs/Glossary.md`
+- **Why:** A branch name is not isolation. `checkout -b` in the shared project folder moves every chat using that folder onto the new branch and mixes uncommitted files.
+- **What:** Default is `git worktree add ..\<RepoName>_<topic> -b wip/<topic>` and open the new chat **there**. Same-folder `checkout -b` is an explicit exception with a loud warning.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-08-14 — New chat session owns a topic branch
 
 - **Files:** `AGENTS.md`
