@@ -44,11 +44,25 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-08-20 — Table columns autosize then stay resizable
+
+- **Files:** `docs/Coding_Standards.md`
+- **Why:** Desktop tables that lock column widths fight the mouse.
+- **What:** UI standard: autosize columns to contents on first paint, then leave them user-resizable. Stretch at most the last column. Icon/checkbox columns may stay fixed.
+- **Benefit:** UX clarity
+
 ### 2026-08-16 — Session wrap-up returns the shared folder to main
 
 - **Files:** `AGENTS.md`, `docs/PROCESS.md`, `docs/Lessons_Learned.md`, `docs/Glossary.md`
 - **Why:** `git worktree add` without a start-point inherits this folder’s HEAD. Pushing a topic branch does not move any folder back to `main`.
 - **What:** Always pass `main` to `worktree add`. After a **This folder** session, `git checkout main` (checkout ≠ merge). PROCESS wrap-up table.
+- **Benefit:** Improve code hygiene / documentation
+
+### 2026-08-17 — One folder; no default worktrees
+
+- **Files:** `docs/PROCESS.md`, `docs/Lessons_Learned.md`
+- **Why:** Sibling worktrees made a mess. Human lock: stay in the project folder.
+- **What:** New session = `checkout -b` here. `git worktree add` only if asked.
 - **Benefit:** Improve code hygiene / documentation
 
 ### 2026-08-15 — Lessons: Grok multi-session

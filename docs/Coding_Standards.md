@@ -42,6 +42,7 @@ If extracting **adds net lines** without clarity, you over-engineered it.
 
 - Named debounce constants for gesture-driven reloads.
 - Status text should answer: what is happening, and is it done?
+- **Tables:** columns are **autosized to contents on first paint**, then **user-resizable**. Do not lock widths (no standing “size to contents” / stretch mode that blocks drag). After load, autosize, then leave resize Interactive so the user can drag. Stretch at most the last column if leftover width must fill. Icon/checkbox columns may stay fixed.
 
 ## Logging
 
