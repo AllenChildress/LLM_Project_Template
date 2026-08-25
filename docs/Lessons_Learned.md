@@ -4,9 +4,13 @@ Durable scars. Prefer **short rules** over novels.
 
 ## Grok multi-session
 
-- **One folder. Do not add sibling worktrees** unless the human asks. Extra checkouts (missing locals, two chats, rebase soup) were worse than sharing one checkout. New session = `checkout -b` **here**.
+- **Parallel sessions use worktrees (2026-08-25).** Concurrent and long-running tasks **must** use a dedicated worktree + unique branch. **Never** edit the main working tree while another session is active. Isolation is the worktree, not the branch name.
+- **VS Code Grok Build has no `--worktree` launch switch.** Before the first edit, purple-pick the worktree (same shape as the old branch pick). After **New worktree**, create it from `main`, copy gitignored locals, and **stop editing the primary tree** — the human opens that folder to continue. CLI/TUI may still use `grok --worktree=<name> --ref main`.
+- **Missing locals.** `git worktree add` copies the commit, not `.env` / tokens / caches. Copy those from the primary checkout before asking them to run the app.
+- **Always pass `main`.** `git worktree add PATH -b wip/topic` with no start-point inherits this folder’s HEAD.
 - **Two independently opened chats cannot DM each other.** The human is the bus. Durable handoff is git.
-- **`checkout -b` still moves this folder.** Two chats here share one branch. Prefer one editing session at a time. After a topic-branch session, `git checkout main`.
+- **`checkout -b` still moves this folder.** Two chats here share one branch. Do not `checkout -b` in the primary tree to “make room.”
+- **One-folder lock (2026-08-17) is superseded.** That lock (stay in one folder, `checkout -b` here, worktree only if asked) is **reversed**. Do not follow it.
 
 ## General (portable)
 

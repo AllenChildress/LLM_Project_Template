@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-08-25 — Parallel Grok sessions: worktree isolation
+
+- **Files:** `AGENTS.md`, `docs/PROCESS.md`, Glossary, Lessons, `docs/Coding_Standards.md`
+- **Why:** Two Grok chats in the primary folder share one checkout. `checkout -b` in the second chat moves the first and mixes uncommitted files. VS Code Grok Build has no `--worktree` launch switch.
+- **What:** Concurrent / long-running sessions **must** start in a dedicated worktree + unique branch. **VS Code:** purple worktree pick before the first edit (Recommended `New worktree wip/<topic>` + Stay in this tree); create from `main`, copy locals, stop editing the primary tree. **CLI/TUI:** `grok --worktree=<name> --ref main`. File-touching subagents: `isolation: worktree`. Finish: push + PR (or merge) + remove the worktree. Permission timeout aborts the tree. The 2026-08-17 one-folder lock is reversed.
+- **Benefit:** Reliability / stability
+
 ### 2026-08-20 — Table columns autosize then stay resizable
 
 - **Files:** `docs/Coding_Standards.md`

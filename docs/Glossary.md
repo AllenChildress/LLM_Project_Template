@@ -13,7 +13,9 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 | **Integration test** | Cross-module; may use local services. |
 | **Change_Log** | User-visible history (Why / What / Benefit). |
 | **ToDo** | Backlog; finished work leaves open columns. |
-| **Worktree** | A second **folder** of the same git repo, each with its own checked-out branch. Two Grok chats need two folders or they share one checkout. |
+| **Worktree** | A second **folder** of the same git repo, each with its own checked-out branch. Concurrent Grok sessions **must** use one. **VS Code:** purple-pick before the first edit, then `git worktree add PATH -b wip/<topic> main`. **CLI/TUI:** `grok --worktree=<name> --ref main`. Always pass **`main`**. |
+| **Done** | Last line of a finished Grok session that was **not** pushed (abort / hold). |
+| **Push Complete** | Last line of a finished Grok session after the topic branch was pushed, a PR opened (or merged), and the worktree removed. |
 
 ## Libraries (common Python)
 

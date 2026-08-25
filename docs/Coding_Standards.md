@@ -503,7 +503,7 @@ Before finishing a task (feature, fix, or refactor) — code **and** docs:
 
 **Documentation** (same commit series as code — see [PROCESS.md](PROCESS.md) §3 and [AGENTS.md](../AGENTS.md))
 
-- [ ] **Change summary** written for Allen (AGENTS.md handoff template). **Do not push** until Allen has tested and asked.
+- [ ] **Change summary** written for the human (AGENTS.md handoff template). When the session finishes: push the topic branch, open a PR (or merge), remove the worktree ([PROCESS.md](PROCESS.md) § Parallel sessions).
 - [ ] [Change_Log.md](Change_Log.md) row when behavior, schema, or user-facing output changed (**Why** / **What** / **Benefit**; **Shot:** when a tab/chrome paint changed — PROCESS § Change_Log screenshots).
 - [ ] [ToDo.md](ToDo.md) whenever the task involved an open ToDo item — completed parent block → [ToDo_Completed.md](ToDo_Completed.md); new work → open item added. **Required if ToDo was in scope;** not optional.
 - [ ] This file **only** when a new **rule** or workflow norm changed — **not** for small bug fixes or routine features.
