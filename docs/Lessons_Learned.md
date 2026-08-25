@@ -4,10 +4,9 @@ Durable scars. Prefer **short rules** over novels.
 
 ## Grok multi-session
 
-- **A branch is not a folder.** `git checkout -b wip/other` in the project directory **moves that folder** onto the new branch. A second Grok chat in the same directory is now on `wip/other` too; uncommitted files mix. Isolation = sibling worktree (`git worktree add ..\<RepoName>_<topic> -b wip/<topic> main`) **and** open the new chat **in that folder**. Always pass **`main`** — omit it and the new branch starts at this folder’s HEAD. Default is folder + branch; same-folder checkout is an explicit exception. See PROCESS § New Grok session → branch + folder. Official: [git-worktree](https://git-scm.com/docs/git-worktree).
-- **Pushing does not move any folder.** After a **This folder** session, `git checkout main` so the next chat here is not still on `wip/<topic>`. Checkout ≠ merge.
-- **Two independently opened chats cannot DM each other.** No mailbox. The human is the bus. `/dashboard` peek/reply only reaches agents in the **same pager**. Durable handoff is git (commits, Change_Log) — not scratch files slid between folders unless asked.
-- **A “harmless” docs or analysis session can steal the other chat’s folder.** `checkout -b` in the same directory mixes uncommitted work and can block a push. New sibling folder first; open the new chat **there**. When done: merge, then `git worktree remove <folder>` (the branch is the work; the folder is disposable).
+- **One folder. Do not add sibling worktrees** unless the human asks. Extra checkouts (missing locals, two chats, rebase soup) were worse than sharing one checkout. New session = `checkout -b` **here**.
+- **Two independently opened chats cannot DM each other.** The human is the bus. Durable handoff is git.
+- **`checkout -b` still moves this folder.** Two chats here share one branch. Prefer one editing session at a time. After a topic-branch session, `git checkout main`.
 
 ## General (portable)
 

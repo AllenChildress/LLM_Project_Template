@@ -73,38 +73,23 @@ New behavior → at least unit unless the only risk is shell-level.
 - **SQL text lives in files** (Coding_Standards § SQL lives in files): multi-line queries and DDL are `.sql` (or migration files), not string literals in app code. The DBA / database lane owns the statement text; app code loads and runs it.
 - Same change series: delta/migration + embedded/schema SQL the app applies + docs (Schema / runbook) when the live schema moves.
 
-## New Grok session → branch + folder
+## New Grok session → branch (one folder)
 
-A new Grok chat is **not** isolated by a branch name. Git can check out only **one** branch in a given folder. Two chats in the same project directory share one checkout — `checkout -b wip/other` in the second chat **moves** the first chat’s folder onto that branch and mixes uncommitted files.
+**Default: one project folder.** Do **not** `git worktree add` unless the human explicitly asks. Extra checkouts (missing `.env` / tokens / caches, two chats, rebase soup) were worse than sharing one checkout.
 
-**Default (agents):** after the human picks `wip/<topic>`, create a **sibling worktree** from **`main`**, do not steal this folder:
+Git can check out only **one** branch in a given folder. Two chats there share that checkout. Prefer one editing session at a time, or **Stay on current branch**.
+
+**Default (agents):** after they pick `wip/<topic>`:
 
 ```text
-git worktree add "<parent>\<RepoName>_<topic>" -b wip/<topic> main
+git checkout -b wip/<topic>
 ```
 
-Example: repo `C:\Users\You\Projects\MyApp` → `C:\Users\You\Projects\MyApp_privacy-mode`.
+Warn if other uncommitted WIP would come along. Subagents never create a branch.
 
-The last argument (`main`) is required. Omit it and the new branch starts at **this folder’s HEAD**.
+### Wrap-up
 
-Then **stop**. Ask them to open the **new** chat in that folder. This chat keeps the original folder and branch. Do not `checkout` the primary folder onto the new branch.
-
-| Human picks | Agent does |
-|-------------|------------|
-| **New sibling folder** (default) | `git worktree add … -b wip/<topic> main`. Stop. Ask them to open a chat **there**. |
-| **This folder** | `git checkout -b wip/<topic>` **here**. Warn: every other chat in this folder is now on that branch. |
-| **Stay on current branch** | No checkout, no worktree. |
-
-Subagents never create a branch or a worktree. They stay on the parent session’s folder.
-
-### Wrap-up (return the shared folder to idle)
-
-Pushing a branch does **not** change any folder’s checkout. Merge only when the human asks. Checkout ≠ merge.
-
-| How you worked | When the session is finished |
-|----------------|------------------------------|
-| **Sibling folder** (default) | The primary repo folder should still be on `main`. Push the topic branch only if asked. Then `git worktree remove "<sibling>"` (or delete the folder only after `git worktree list` no longer lists it). |
-| **This folder** (exception) | After `Done` / `Push Complete`: `git checkout main` **in this folder** so the next chat here is not still on `wip/<topic>`. Leave the topic branch in the repo until they ask to merge or delete it. |
+Pushing does **not** change the checkout. After `Done` / `Push Complete`: `git checkout main` so the next chat here is not still on `wip/<topic>`.
 
 ### Wrong base (no unique commits)
 
