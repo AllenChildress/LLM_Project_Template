@@ -11,6 +11,7 @@ Durable scars. Prefer **short rules** over novels.
 - **Two independently opened chats cannot DM each other.** The human is the bus. Durable handoff is git.
 - **`checkout -b` still moves this folder.** Two chats here share one branch. Do not `checkout -b` in the primary tree to “make room.”
 - **One-folder lock (2026-08-17) is superseded.** That lock (stay in one folder, `checkout -b` here, worktree only if asked) is **reversed**. Do not follow it.
+- **Database changes are single-threaded.** Copied `.env` points every worktree at the same database. Before DDL / migrations: `git worktree list` — this session must be the only topic worktree. If another exists, stop.
 
 ## General (portable)
 

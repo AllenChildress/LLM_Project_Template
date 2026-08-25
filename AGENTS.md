@@ -36,6 +36,7 @@ Run `git status` and `git worktree list` before editing. Stage **only** this ses
 - Subagents that touch files: always request `isolation: worktree`. (`cwd` cannot combine with that — put the nested `AGENTS.md` working set in the spawn prompt.)
 - Commit early and often on the worktree branch. Do not leave uncommitted changes that another session could see.
 - Never assume shared state, open files, or previous multi-select answers from another session.
+- **Database changes are single-threaded.** Worktrees share one database when they copy the same `.env`. Before DDL, migrations, or store schema work: `git worktree list`. This session must be the **only topic worktree** (primary checkout on `main` may remain). If another worktree is in play, **stop** and tell the human. Do not migrate while another session can use the database.
 - When finished: push the branch, open a PR (or merge), then remove the worktree.
 - If a permission / multi-select times out: treat the session as aborted. Do not continue in the same tree.
 
@@ -85,6 +86,7 @@ First line of each user-visible reply: `main:` or specialist name (`ui:`, `dba:`
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
 | Non-obvious fix? | Lessons_Learned |
+| Database / schema change? | Single-threaded: `git worktree list` — this session must be the only topic worktree, then migrate. |
 | Secrets? | Never commit |
 
 ## Do not commit

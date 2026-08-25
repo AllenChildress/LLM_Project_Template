@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-08-25 — Database changes are single-threaded across worktrees
+
+- **Files:** `AGENTS.md`, `docs/PROCESS.md`, Lessons
+- **Why:** Worktrees copy `.env`, so they share one database. Two sessions migrating, or one migrating while another runs the app, will collide.
+- **What:** Before DDL / migrations, `git worktree list`. This session must be the **only topic worktree** (primary `main` checkout may remain). If another worktree is in play, stop and tell the human.
+- **Benefit:** Reliability / stability
+
 ### 2026-08-25 — Parallel Grok sessions: worktree isolation
 
 - **Files:** `AGENTS.md`, `docs/PROCESS.md`, Glossary, Lessons, `docs/Coding_Standards.md`

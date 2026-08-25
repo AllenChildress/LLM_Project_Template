@@ -100,6 +100,18 @@ New behavior → at least unit unless the only risk is shell-level.
 - Commit **early and often** on the worktree branch. Do not leave uncommitted changes that another session could see.
 - Never assume shared state, open files, or previous multi-select answers from another session.
 
+### Database (single-threaded)
+
+Worktrees copy `.env`, so they all talk to the **same** database. Schema, migrations, and store DDL are **not** isolated.
+
+Before any database change (migrations, schema SQL, destructive store work):
+
+1. Run `git worktree list`.
+2. This session must be the **only topic worktree**. The primary checkout on `main` may remain. A second topic worktree means **stop**.
+3. Tell the human. Do not migrate while another session can run the app or apply its own DDL against that database.
+
+Idle leftover folders still count until they are removed. Isolating databases per worktree is later work; until then this gate is the fence.
+
 ### Abort
 
 If a permission / multi-select **times out**: treat the session as aborted. Do not continue in the same tree.
