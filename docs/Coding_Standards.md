@@ -156,6 +156,8 @@ A `kind` / `type` string plus `if kind == "trade"` / `"event"` / `"bar"` is a mi
 
 A switch is acceptable only for a closed pair that will not grow (true vs false). The moment there is a third “type of X”, it is a list of interface implementers.
 
+The other extract: the **same bundle of facts** threaded through many functions (see Rule of Three — named instance).
+
 **Do not add a second identifier.** A `kind="psar"` string beside `isinstance(item, PsarOverlay)` is the kind switch in disguise. The **class is the identifier**. GUI toolkits already do this (`isinstance` / `qobject_cast`, Qt `QGraphicsItem.type()` with `UserType`). One object can inherit toolkit + domain interfaces. Two parallel IDs for the same object will drift.
 
 
@@ -258,16 +260,22 @@ The duplication is intentional: the next reader sees the rule in the file withou
 
 ## Rule of Three
 
-Applies to **helpers**, **literals**, and **repeated magic values** — not only long functions.
+Applies to **helpers**, **literals**, **repeated magic values**, and the **same bundle of facts** threaded through many functions — not only long functions.
 
 | Count | What to do |
 |-------|------------|
 | **Once** | Fine inline. |
 | **Twice** | Duplication is OK for tiny snippets (about 1–2 lines) or one-off literals. |
-| **Three** | Strong signal to centralize (shared helper or named constant). |
-| **Four or more** | **Must** be a named constant or helper, scoped **as closely as possible** (function → module → package). Do not leave the same string/number/tuple copy-pasted. |
+| **Three** | Strong signal to centralize (shared helper, named constant, or **named instance**). |
+| **Four or more** | **Must** be a named constant, helper, or class, scoped **as closely as possible** (function → module → package). Do not leave the same string/number/tuple copy-pasted. |
 
 If centralizing **adds net lines to callers** without shrinking the overall codebase, it is probably over-engineered. Refactors should make call sites shorter and clearer.
+
+### Same thing across functions → a named instance
+
+When you keep talking about **the same thing** across a stretch of functions — the same entity + window + mode as parallel kwargs, a fat tuple, or a dict you unpack at every hop — that thing should be **real**: a class (or frozen dataclass) with a one-line purpose. Callers pass **one instance**.
+
+Count still follows the table. Third copy of the same bundle is the extract. GUI widgets are this in the UI domain. Identity / DB-parity types live under the app’s domain package. Live run state lives on session objects. Do not paper over the extract with leftover `@property` names (see Files).
 
 ### Literals and enterprise scale
 
@@ -491,6 +499,7 @@ Before finishing a task (feature, fix, or refactor) — code **and** docs:
 
 - [ ] Net line count at call sites went down (or stayed flat with real duplication removed).
 - [ ] No third copy of the same 3+ line block remains.
+- [ ] No third copy of the same kwargs/tuple/dict bundle across functions — that bundle is a named class (one instance), not more kwargs.
 - [ ] Errors route through the shared formatter.
 - [ ] New/changed classes and major functions have a one-line purpose comment.
 - [ ] New/changed imports have inline purpose comments.
