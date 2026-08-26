@@ -6,7 +6,7 @@ How humans and agents work on **any** project that uses this staff kit.
 
 1. **Outcome-level work** — design, implement, smoke, document without re-teaching process each time.
 2. **Docs with the code** — same change series as behavior.
-3. **Do not push** until the human has tested (or explicitly waived) and asked to push.
+3. **When a session finishes:** push the topic branch, open a PR (or merge if the human asked to merge), then remove the worktree. Pushing a topic branch is not a merge to `main`.
 4. **Short answers** to humans; completeness is in files and tests, not essay chat.
 
 ## Change_Log
@@ -73,23 +73,58 @@ New behavior → at least unit unless the only risk is shell-level.
 - **SQL text lives in files** (Coding_Standards § SQL lives in files): multi-line queries and DDL are `.sql` (or migration files), not string literals in app code. The DBA / database lane owns the statement text; app code loads and runs it.
 - Same change series: delta/migration + embedded/schema SQL the app applies + docs (Schema / runbook) when the live schema moves.
 
-## New Grok session → branch (one folder)
+## Parallel sessions (mandatory)
 
-**Default: one project folder.** Do **not** `git worktree add` unless the human explicitly asks. Extra checkouts (missing `.env` / tokens / caches, two chats, rebase soup) were worse than sharing one checkout.
+**Lock:** parallel Grok sessions use **isolated git worktrees**, not a shared primary checkout. A branch name is not isolation — two chats in one folder share one checkout. `checkout -b` in the second chat **moves** the first and mixes uncommitted files.
 
-Git can check out only **one** branch in a given folder. Two chats there share that checkout. Prefer one editing session at a time, or **Stay on current branch**.
+### Start
 
-**Default (agents):** after they pick `wip/<topic>`:
+- **NEVER** edit the main working tree when any other Grok session is active.
+- Every **concurrent** or **long-running** task **MUST** start in a dedicated git worktree + unique branch.
+- If this session is **already** in its worktree and the first message is a continuation → stay. No pick.
+- Subagents that **touch files**: always `isolation: worktree`. Read-only children may pass module `cwd`. `cwd` and worktree isolation are mutually exclusive; when isolated, paste the nested `AGENTS.md` working set into the spawn prompt.
+- Stage **only** this session’s files. Never `git add -A`.
 
-```text
-git checkout -b wip/<topic>
-```
+**VS Code Grok Build** has no `--worktree` launch switch. **Before the first edit**, if this session is in the primary tree (or another session’s worktree), confirm with a **purple multi-pick** — same shape as the old branch pick:
 
-Warn if other uncommitted WIP would come along. Subagents never create a branch.
+| Human picks | Agent does |
+|-------------|------------|
+| **`New worktree wip/<short-topic>` (Recommended)** | `git worktree add "<parent>\<RepoName>_<topic>" -b wip/<topic> main` (always pass **`main`**). Copy gitignored runtime (`.env`, tokens, caches) from the primary checkout. Tell them the folder path. **Do not keep editing the primary tree** — they continue by opening that folder in VS Code (or a new Grok chat there). |
+| **Stay in this tree** | Stay only if this is already the session’s worktree. If this is the primary tree and another Grok session is active → **stop**. Do not `checkout -b` here to “make room.” |
+| **Other** | Name they typed: same create path as New worktree. |
+
+**CLI / TUI (optional):** when they can pass flags, `grok --worktree=<short-descriptive-name> --ref main "<prompt>"` already lives in the worktree — skip the pick. Use `--worktree=` (with `=`) so the prompt is not swallowed as the label.
+
+### During
+
+- Commit **early and often** on the worktree branch. Do not leave uncommitted changes that another session could see.
+- Never assume shared state, open files, or previous multi-select answers from another session.
+
+### Database (single-threaded)
+
+Worktrees copy `.env`, so they all talk to the **same** database. Schema, migrations, and store DDL are **not** isolated.
+
+Before any database change (migrations, schema SQL, destructive store work):
+
+1. Run `git worktree list`.
+2. This session must be the **only topic worktree**. The primary checkout on `main` may remain. A second topic worktree means **stop**.
+3. Tell the human. Do not migrate while another session can run the app or apply its own DDL against that database.
+
+Idle leftover folders still count until they are removed. Isolating databases per worktree is later work; until then this gate is the fence.
+
+### Abort
+
+If a permission / multi-select **times out**: treat the session as aborted. Do not continue in the same tree.
 
 ### Wrap-up
 
-Pushing does **not** change the checkout. After `Done` / `Push Complete`: `git checkout main` so the next chat here is not still on `wip/<topic>`.
+When finished:
+
+1. Commit remaining work on the worktree branch.
+2. **Push** the branch.
+3. Open a **PR** (or **merge** if the human asked to merge). Pushing a topic branch is not a merge to `main`.
+4. **Remove** the worktree (`git worktree remove <path>` or `grok worktree rm`). Never delete the primary checkout.
+5. Last line: `Push Complete`. Use `Done` only when work is finished locally and **not** pushed (abort / hold).
 
 ### Wrong base (no unique commits)
 
@@ -99,13 +134,13 @@ git reset --hard main
 git stash pop
 ```
 
-If the sibling has unique commits to keep: `git rebase main` in that folder (not reset).
+If the worktree has unique commits to keep: `git rebase main` in that folder (not reset).
 
-Agent checklist: root [AGENTS.md](../AGENTS.md) § New chat session → own branch and folder.
+Agent checklist: root [AGENTS.md](../AGENTS.md) § Parallel Session Rules.
 
 ## Handoff to human
 
-Short: what changed · files · how to verify · docs · push status (local until asked).
+Short: what changed · files · how to verify · docs · branch pushed + PR (or merge) · worktree removed.
 
 ## Solo / small team (keep light)
 

@@ -25,33 +25,24 @@ Portable entry point. **Copy into each app** and replace the architecture paragr
 | Kit spine | [Project.md](Project.md) |
 | Setup / install | [README.md](README.md) (Environment setup) |
 
-Run `git status` before editing. **Do not push** until the human explicitly asks.
+Run `git status` and `git worktree list` before editing. Stage **only** this session’s files. Never `git add -A`.
 
-## New chat session → own branch **and** own folder
+## Parallel Session Rules (mandatory)
 
-A **new Grok/chat session** (the human opened a new conversation) owns a **topic branch** **and** a **sibling folder** (git worktree). A branch name alone is **not** isolation — one folder can only have one branch checked out. **Subagents do not get a branch or a folder** — they stay on this session’s branch and tree.
+- **NEVER** edit the main working tree when any other Grok session is active.
+- Every concurrent or long-running task **MUST** start in a dedicated git worktree + unique branch.
+- **VS Code Grok Build (no launch switches):** before the first edit, confirm the worktree with a **purple multi-pick** — same shape as the old branch pick. Recommended **`New worktree wip/<short-topic>`** from the first message goes **first**, marked **`(Recommended)`**. Include **Stay in this tree**. The tool already adds **Other**.
+- **CLI / TUI (optional):** `grok --worktree=<short-descriptive-name> --ref main "..."` — skip the pick when this session already lives in that worktree.
+- Subagents that touch files: always request `isolation: worktree`. (`cwd` cannot combine with that — put the nested `AGENTS.md` working set in the spawn prompt.)
+- Commit early and often on the worktree branch. Do not leave uncommitted changes that another session could see.
+- Never assume shared state, open files, or previous multi-select answers from another session.
+- **Database changes are single-threaded.** Worktrees share one database when they copy the same `.env`. Before DDL, migrations, or store schema work: `git worktree list`. This session must be the **only topic worktree** (primary checkout on `main` may remain). If another worktree is in play, **stop** and tell the human. Do not migrate while another session can use the database.
+- When finished: push the branch, open a PR (or merge), then remove the worktree.
+- If a permission / multi-select times out: treat the session as aborted. Do not continue in the same tree.
 
-**Before the first edit** in a new session, if HEAD is `main` / `master` or another session’s `wip/*`:
+**Resume:** already in this session’s worktree and the first message is a continuation → stay (no pick).
 
-1. Run `git status`, `git branch --show-current`, and `git worktree list`. If this folder already has uncommitted files this session did not write, **say so** — do not carry someone else’s WIP.
-2. Confirm the **branch name** with a **purple multi-pick**. Recommended `wip/<short-topic>` from the first message goes **first**, marked **`(Recommended)`**. Include **Stay on current branch**. The tool already adds **Other**.
-3. Confirm **where** with a second purple pick (same turn is fine):
-   - **New sibling folder (Recommended)** — isolated worktree + new branch.
-   - **This folder** — `checkout -b` here. **Loud warning:** every other chat using this folder is now on that branch; their uncommitted files come along.
-   - **Stay on current branch** — no checkout, no worktree.
-4. After **New sibling folder**:  
-   `git worktree add "<parent>\<RepoName>_<topic>" -b wip/<topic> main`  
-   Example: this repo is `C:\Users\You\Projects\MyApp` → `C:\Users\You\Projects\MyApp_privacy-mode`.  
-   **Always pass `main`** (or another explicit start commit). Omit it and the new branch starts at this folder’s HEAD.  
-   Then **stop and tell the human** (do not keep editing here): open a **new** Grok chat **in that folder**. This chat stays in the original folder. Do not `checkout` this folder onto the new branch.
-5. After **This folder**: `git checkout -b wip/<name>` and warn again. Do not push until asked.
-6. Stage **only** this session’s files. Never `git add -A`.
-
-**Resume:** already on `wip/<topic>` in the folder this chat opened, and the first message is a continuation → stay. Do not invent a second branch or a second folder.
-
-**Wrap-up:** pushing does not move any folder. If you used **This folder**, `git checkout main` when the session finishes. If you used a sibling, leave the primary folder on `main` and `git worktree remove` the sibling after they are done with it. Merge only when asked.
-
-Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § New Grok session → branch + folder.
+Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions.
 
 ## Global coding standards (short)
 
@@ -66,7 +57,7 @@ Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § New Grok session → branch
 
 ## Orchestration (optional multi-agent)
 
-Main session = orchestrator. Spawn specialists only for **large exclusive** work.
+Main session = orchestrator. Spawn specialists only for **large exclusive** work. File-touching children: `isolation: worktree`.
 
 | Prompt mainly about… | Spawn (example) |
 |----------------------|-----------------|
@@ -89,12 +80,13 @@ First line of each user-visible reply: `main:` or specialist name (`ui:`, `dba:`
 
 | Question | Action |
 |----------|--------|
-| **New chat session on `main`?** | Multi-pick `wip/<topic>` **and** a sibling folder (worktree **from `main`**) **before edits**. `checkout -b` in this folder is the exception. After a **This folder** session, `git checkout main`. Subagents do not branch. |
+| **New / concurrent / long-running session?** | Dedicated worktree + unique branch. **VS Code:** purple worktree pick before the first edit (Recommended `New worktree wip/<topic>` + Stay in this tree). **NEVER** edit the main working tree while another Grok session is active. File-touching subagents: `isolation: worktree`. |
 | User-visible change? | Change_Log row (Why / What / Benefit) |
 | User-visible **view paint**? | Run the app, screenshot each modified view, `python scripts/promote_changelog_shot.py`, add **Shot:** — PROCESS § Screenshots |
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
 | Non-obvious fix? | Lessons_Learned |
+| Database / schema change? | Single-threaded: `git worktree list` — this session must be the only topic worktree, then migrate. |
 | Secrets? | Never commit |
 
 ## Do not commit
