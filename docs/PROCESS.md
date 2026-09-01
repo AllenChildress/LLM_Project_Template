@@ -65,6 +65,17 @@ Non-obvious fixes, environmental traps, “never do X again.” Prefer durable r
 
 New behavior → at least unit unless the only risk is shell-level.
 
+### Cyclomatic complexity (new / changed code)
+
+When a slice of application code is done, score **touched functions** (McCabe). Stock_Data: `python scripts/score_cc.py <files>` (same visitor as the Tech Debt tab).
+
+| | Gate |
+|--|------|
+| **Target** | CC **≤ 10** |
+| **Too high** | CC **> 15** — split or a named leave-whole note |
+
+Uncle Bob (Matt Pocock 2026-08-19) ran a **Complexity Score** (complexity × coverage) first on agent output — human **< 4**, agents **6–8**. A Tech Debt / hotspot table (CC × churn) is the cousin you can ship before coverage is in the loop. Do not invent a second formula.
+
 ## Migrations / schema (if DB included)
 
 - Versioned SQL or migration tool of choice.

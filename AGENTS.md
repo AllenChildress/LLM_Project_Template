@@ -85,6 +85,7 @@ First line of each user-visible reply: `main:` or specialist name (`ui:`, `dba:`
 | User-visible **view paint**? | Run the app, screenshot each modified view, `python scripts/promote_changelog_shot.py`, add **Shot:** — PROCESS § Screenshots |
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
+| New / changed application code? | Cyclomatic complexity on touched functions — **CC ≤ 10** target, **CC > 15 too high** (PROCESS § Cyclomatic complexity) |
 | Non-obvious fix? | Lessons_Learned |
 | Database / schema change? | Single-threaded: `git worktree list` — this session must be the only topic worktree, then migrate. |
 | Secrets? | Never commit |

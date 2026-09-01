@@ -184,6 +184,7 @@ Command vs query (do not mix a mutation with a returned answer):
 - **Keep functions short** — one job, typically far under a screen. The **~500-line** split signal is for **files** (below), not functions. A 500-line function that returns one object still failed “small” and usually failed “one thing,” unless every inner line is a field of that same object and an extract would only restate `row.qty = payload["quantity"]`.
 - **Meaningful names** over abbreviations — `plan_minute_fetch_windows`, not `pmfw`.
 - **Few arguments** — more than three or four parameters is a signal to introduce a small options object or dataclass.
+- **Cyclomatic complexity (CC)** on new or changed functions: **target ≤ 10**, **too high > 15** (split or name a leave-whole exception). Same McCabe idea as a Tech Debt hotspot table. Uncle Bob **Complexity Score** (CC × coverage): human **< 4**, agents **6–8** — run that when coverage is in the loop; do not invent a second formula. See PROCESS § Cyclomatic complexity.
 
 ### Files
 
