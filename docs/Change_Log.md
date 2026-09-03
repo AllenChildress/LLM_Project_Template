@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-09-03 — Click-path tutorial stays current with UI
+
+- **Files:** `docs/PROCESS.md`
+- **Why:** Screenshot Change_Log thumbs are not a how-to-click guide. Apps that add `docs/tutorial/` need agents to update the matching page when chrome or user-visible backend changes.
+- **What:** PROCESS screenshots: if `docs/tutorial/` exists, update the matching page in the same series as UI or backend-that-affects-UI work. Keep pages short.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-09-03 — CI / pytest unfold stays dormant until a threshold
 
 - **Files:** `docs/PROCESS.md`, `AGENTS.md`, `tests/README.md`, `Project.md`, Glossary

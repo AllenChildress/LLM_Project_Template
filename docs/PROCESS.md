@@ -36,6 +36,8 @@ Goal: a visible **progression** of the UI, not a dump of error captures.
 
 Thumbs live in `docs/changelog_shots/` (tracked, JPEG, max width 900). Runtime PNGs stay gitignored.
 
+If the app keeps a **click-path tutorial** (`docs/tutorial/`), update the matching page in the **same series** as a UI change or a backend change that alters what the user clicks or sees. Skip when there is no user-visible click/paint change. Keep those pages short (click → see → one thumb), not a second feature list.
+
 Apps with a desktop shell should also keep a `scripts/capture_changelog_tabs.py` that boots the UI, waits for paint, and grabs each requested tab. The copy in this kit is a **stub** — bind it to your window.
 
 ## ToDo

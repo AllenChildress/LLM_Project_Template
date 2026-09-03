@@ -83,6 +83,7 @@ First line of each user-visible reply: `main:` or specialist name (`ui:`, `dba:`
 | **New / concurrent / long-running session?** | Dedicated worktree + unique branch. **VS Code:** purple worktree pick before the first edit (Recommended `New worktree wip/<topic>` + Stay in this tree). **NEVER** edit the main working tree while another Grok session is active. File-touching subagents: `isolation: worktree`. |
 | User-visible change? | Change_Log row (Why / What / Benefit) |
 | User-visible **view paint**? | Run the app, screenshot each modified view, `python scripts/promote_changelog_shot.py`, add **Shot:** — PROCESS § Screenshots |
+| Click-path tutorial (`docs/tutorial/`)? | Same series as UI or backend-that-affects-UI: update the matching tutorial page (PROCESS § Screenshots) |
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
 | Testing past the kit stub? | If ≥25 unit tests, a suite runner, or the human asked for CI → **one** purple pick to unfold Stock_Data-style pytest (PROCESS § CI / pytest unfold). Do not unfold silently. |
