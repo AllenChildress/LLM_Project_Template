@@ -11,6 +11,9 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 | **Smoke test** | Minimal “system still boots / critical path alive” check. |
 | **Unit test** | Fast, isolated logic test. |
 | **Integration test** | Cross-module; may use local services. |
+| **Canary** | A tiny sniff-test that runs **before** the rest of the suite (typical moles). Stock_Data: `src/testing/canaries.json`. |
+| **pytest-testmon** | Pytest plugin that re-runs tests whose code changed (`--impacted`). **Local only** — CI has no map. |
+| **CI unfold** | Kit default: no GitHub Actions. When tests cross the PROCESS threshold, one purple pick to add canaries + testmon + a unit workflow. |
 | **Change_Log** | User-visible history (Why / What / Benefit). |
 | **ToDo** | Backlog; finished work leaves open columns. |
 | **Worktree** | A second **folder** of the same git repo, each with its own checked-out branch. Concurrent Grok sessions **must** use one. **VS Code:** purple-pick before the first edit, then `git worktree add PATH -b wip/<topic> main`. **CLI/TUI:** `grok --worktree=<name> --ref main`. Always pass **`main`**. |

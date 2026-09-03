@@ -51,7 +51,7 @@ Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions.
 - Rule of Three before extracting shared helpers.
 - Prefer domain/session objects over new parallel maps.
 - **Multi-line SQL in `.sql` files** (DBA/schema lane owns text); app code loads/runs — see Coding_Standards.
-- Tests under `tests/{unit,integration,smoke}/`.
+- Tests under `tests/{unit,integration,smoke}/`. **CI/CD stays dormant** until PROCESS § CI / pytest unfold (then one purple pick — do not scaffold GitHub Actions or pytest-testmon on day one).
 - Docs hygiene with the code: Change_Log / ToDo / Lessons when PROCESS requires it.
 - Commits: clear subject; optional trailers `Assisted-by: Grok Build`.
 
@@ -85,6 +85,7 @@ First line of each user-visible reply: `main:` or specialist name (`ui:`, `dba:`
 | User-visible **view paint**? | Run the app, screenshot each modified view, `python scripts/promote_changelog_shot.py`, add **Shot:** — PROCESS § Screenshots |
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
+| Testing past the kit stub? | If ≥25 unit tests, a suite runner, or the human asked for CI → **one** purple pick to unfold Stock_Data-style pytest (PROCESS § CI / pytest unfold). Do not unfold silently. |
 | New / changed application code? | Cyclomatic complexity on touched functions — **CC ≤ 10** target, **CC > 15 too high** (PROCESS § Cyclomatic complexity) |
 | Non-obvious fix? | Lessons_Learned |
 | Database / schema change? | Single-threaded: `git worktree list` — this session must be the only topic worktree, then migrate. |

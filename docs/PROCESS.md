@@ -65,6 +65,36 @@ Non-obvious fixes, environmental traps, “never do X again.” Prefer durable r
 
 New behavior → at least unit unless the only risk is shell-level.
 
+### CI / pytest unfold (dormant until a threshold)
+
+**Default is dormant.** A new app gets `tests/{unit,integration,smoke}/` and `python -m pytest tests/unit -q`. It does **not** get GitHub Actions, `pytest-testmon`, or a canary harness on day one. Do not copy Stock_Data’s `src/testing/` or `.github/workflows/` until the human says yes.
+
+**Threshold — unfold is due when any one is true**
+
+| Signal | Why it is enough |
+|--------|------------------|
+| **≥ 25** collected unit tests (not kit stubs) | “Run everything” starts to hide failures |
+| A `scripts/testing/` suite runner exists | Tiers are already a product |
+| The human asks for CI / GitHub Actions | They named the need |
+
+**Then one purple pick** (Recommended first, **Decide later** on the same card). Do **not** unfold silently. Do **not** re-ask every session — write the answer in ToDo.
+
+| Pick | Agent does |
+|------|------------|
+| **Unfold Stock_Data-style pytest (Recommended)** | Canaries first, then unit. Local `--impacted` via **pytest-testmon**. GitHub Actions: canaries then unit, **no** `--impacted` on CI (clean runner has no testmon map). Gitignore `.testmondata`. OOP `TestLane` list, not a tier-string switch. Reference: Stock_Data `src/testing/` + `scripts/testing/run_smoke_suite.py` + `.github/workflows/unit-tests.yml`. |
+| **Stay dormant** | Keep pytest local only. Record the skip in ToDo. |
+| **Decide later** | Same as Stay dormant until they pick again. |
+
+**Unfold shape (when they choose Recommended)**
+
+1. `tests/{unit,integration,smoke}/` — cases stay `test_*` functions unless the app already uses classes.
+2. `canaries.json` — a short sniff list (typical moles) that runs **before** the rest of unit.
+3. Suite script under `scripts/testing/` with `--tier` and optional `--impacted`.
+4. `pytest-testmon` in requirements; `.testmondata` gitignored; `--impacted` is **local only**.
+5. `.github/workflows/` unit job: `windows-latest` (or the app’s OS), pip + `requirements.txt` (not a private conda env), canaries then unit.
+
+Until that pick, agents: no workflow YAML, no testmon dependency, no canary package.
+
 ### Cyclomatic complexity (new / changed code)
 
 When a slice of application code is done, score **touched functions** (McCabe). Stock_Data: `python scripts/score_cc.py <files>` (same visitor as the Tech Debt tab).

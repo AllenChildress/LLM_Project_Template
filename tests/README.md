@@ -22,3 +22,9 @@ python -m pytest tests/unit -q
 ```
 
 Add a thin suite script under `scripts/testing/` when the app grows.
+
+## CI / pytest unfold (dormant)
+
+This kit does **not** ship GitHub Actions or pytest-testmon. Keep it that way until PROCESS § **CI / pytest unfold**.
+
+When the app crosses the threshold (≥25 unit tests, a suite runner, or the human asks for CI), the agent offers **one** purple pick. Recommended: unfold the Stock_Data shape — canaries first, then unit; testmon `--impacted` **locally**; CI runs canaries then unit with **no** `--impacted`.

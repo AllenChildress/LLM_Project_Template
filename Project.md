@@ -38,6 +38,7 @@ Copy answers under each line or reply in chat.
 | Logging norms | Y / N | Levels / story vs construction |
 | tests unit/integration/smoke | Y / N | |
 | pytest + suite script later | Y / N | |
+| CI / pytest unfold (dormant) | Y / N | GitHub Actions + canaries + testmon **off** until PROCESS threshold, then one purple pick |
 | Screenshot smoke (UI apps) | Y / N | |
 | DB schema + migrations pattern | Y / N | See [docs/Database.md](docs/Database.md) |
 | Backup script pattern | Y / N | |

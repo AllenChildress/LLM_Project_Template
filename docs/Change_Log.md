@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-09-03 — CI / pytest unfold stays dormant until a threshold
+
+- **Files:** `docs/PROCESS.md`, `AGENTS.md`, `tests/README.md`, `Project.md`, Glossary
+- **Why:** A new app should not inherit Stock_Data’s GitHub Actions, canaries, and pytest-testmon on day one. Those pay off only after a real suite exists.
+- **What:** Default dormant. Unfold with **one** purple pick when ≥25 unit tests, a suite runner, or the human asks for CI. Recommended shape: canaries then unit; testmon `--impacted` local only; CI never uses `--impacted`.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-09-03 — Purple multi-picks do not time out
 
 - **Files:** `AGENTS.md`, `docs/PROCESS.md`
