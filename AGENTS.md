@@ -38,7 +38,7 @@ Run `git status` and `git worktree list` before editing. Stage **only** this ses
 - Never assume shared state, open files, or previous multi-select answers from another session.
 - **Database changes are single-threaded.** Worktrees share one database when they copy the same `.env`. Before DDL, migrations, or store schema work: `git worktree list`. This session must be the **only topic worktree** (primary checkout on `main` may remain). If another worktree is in play, **stop** and tell the human. Do not migrate while another session can use the database.
 - When finished: push the branch, open a PR (or merge), then remove the worktree.
-- If a permission / multi-select times out: treat the session as aborted. Do not continue in the same tree.
+- Purple multi-picks **must not time out**: CLI `[toolset.ask_user_question] timeout_enabled = false`; VS Code `grok.acp.promptIdleTimeoutMs = 0`. If a pick **still** times out (old session / host bug): abort; do not continue in the same tree.
 
 **Resume:** already in this session’s worktree and the first message is a continuation → stay (no pick).
 

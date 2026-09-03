@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-09-03 — Purple multi-picks do not time out
+
+- **Files:** `AGENTS.md`, `docs/PROCESS.md`
+- **Why:** A timed-out pick looks declined and the agent keeps going in the wrong tree. The CLI default is 30 minutes; VS Code Grok Build also idles `session/prompt` at 30 minutes of silence.
+- **What:** Lock CLI `[toolset.ask_user_question] timeout_enabled = false` (`~/.grok/config.toml` and `requirements.toml`). VS Code: `grok.acp.promptIdleTimeoutMs = 0`. Abort only if a pick **still** times out (old session / host bug).
+- **Benefit:** Reliability / stability
+
 ### 2026-08-25 — Database changes are single-threaded across worktrees
 
 - **Files:** `AGENTS.md`, `docs/PROCESS.md`, Lessons

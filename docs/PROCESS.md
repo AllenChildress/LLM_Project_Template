@@ -123,9 +123,18 @@ Before any database change (migrations, schema SQL, destructive store work):
 
 Idle leftover folders still count until they are removed. Isolating databases per worktree is later work; until then this gate is the fence.
 
+### Purple multi-picks (do not time out)
+
+The human answers purple cards when ready. They **must not** expire.
+
+| Layer | Lock |
+|-------|------|
+| Grok CLI / TUI | `~/.grok/config.toml` **and** `~/.grok/requirements.toml`: `[toolset.ask_user_question] timeout_enabled = false`. Do not turn **Ask-Question timeout** on in `/settings`. |
+| VS Code Grok Build | `grok.acp.promptIdleTimeoutMs = 0` (User settings **and** the workspace). `0` disables the 30-minute idle cap. Applies to **new** sessions. |
+
 ### Abort
 
-If a permission / multi-select **times out**: treat the session as aborted. Do not continue in the same tree.
+If a permission / multi-select **still times out** (old session started before the lock, or a host bug): treat the session as aborted. Do not continue in the same tree.
 
 ### Wrap-up
 
