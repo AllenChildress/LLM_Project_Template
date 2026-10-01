@@ -27,7 +27,7 @@ Copy answers under each line or reply in chat.
 
 | Module | Include? | Notes |
 |--------|----------|--------|
-| AGENTS.md + spawn routing | Y / N | Multi-agent |
+| AGENTS.md | Y / N | Session rules. Nested files are folder reading lists |
 | PROCESS.md | Y / N | Always recommended |
 | Coding_Standards.md | Y / N | Always recommended |
 | Change_Log.md | Y / N | User-visible history |
@@ -44,7 +44,6 @@ Copy answers under each line or reply in chat.
 | Backup script pattern | Y / N | |
 | Recommended libraries list | Y / N | [docs/Libraries.md](docs/Libraries.md) |
 | Domain skills folder | Y / N | Product-specific playbooks |
-| Multi-agent specialists | Y / N | ui/dba/tester/… |
 
 ### Constraints
 
@@ -99,7 +98,6 @@ Enough structure to stay reliable — not a process theater.
 | **One config story** | `.env` / env vars for secrets and local paths; document required keys in `.env.example` (no values that matter). |
 | **Backup before destructive DB** | `pg_dump` (or equivalent) before migrations that drop or rewrite data. |
 | **Keep AGENTS architecture current** | One paragraph that matches the real stack beats a stale essay. |
-| **Multi-agent only when it pays** | Tiny fixes stay on main agent; spawn specialists for large exclusive trees (schema vs UI vs tests). |
 | **Handoff note** | Short: what changed · how to verify · push status (local until asked). |
 
 Skip formal sprint ceremony, mandatory PR templates, and multi-page ADRs until the team or risk actually needs them.

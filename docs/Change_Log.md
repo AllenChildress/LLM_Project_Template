@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-01 — Remove the specialist roster
+
+- **Files:** `AGENTS.md`, `Project.md`, `README.md`, `docs/PROCESS.md`, `docs/Coding_Standards.md`, `docs/Lessons_Learned.md`, `docs/skills/README.md`, `docs/skills/General/Multi_Agent_Project_Setup.md` (deleted)
+- **Why:** Hiring DBA, UI, and the other named roles added chat noise and did not improve the work. Replies still opened with `main:` because that instruction stayed in the kit.
+- **What:** This session does the work. Replies start with the answer. The multi-agent playbook is deleted. Nested `AGENTS.md` files stay as folder reading lists. SQL still lives in `.sql` files. The short note to the human stays.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-10-01 — Dense one-liners get a why-comment first
 
 - **Files:** `docs/Coding_Standards.md`, Lessons
