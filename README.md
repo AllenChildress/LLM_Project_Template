@@ -67,7 +67,7 @@ Postgres wiring after install: [docs/Database.md](docs/Database.md).
 LLM_Project_Template/
   README.md                 # this file
   Project.md                # intake + skeleton + light practices
-  AGENTS.md                 # short agent entry (main thread)
+  AGENTS.md                 # session rules; nested files are folder reading lists
   .vscode/extensions.json   # recommended extensions
   docs/
     PROCESS.md              # how work is done

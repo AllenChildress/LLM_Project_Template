@@ -309,20 +309,20 @@ When placing or moving code, ask: **if this is deleted, what else must go with i
 | SQL text + loader | `src/database/sql/*.sql` + `src/database/sql/loader.py` | Loader exists only to read those files; no `sql_loader.py` outside the folder. |
 | Domain type + table DDL | `src/domain/` + matching `sql/*.sql` when introduced | Parity stays discoverable. |
 
-### SQL lives in files (hard rule — DBA-owned)
+### SQL lives in files (hard rule)
 
-**Do not** leave SQL as Python string literals in application code (stores, reports, workers) — **including one-liners**. SQL changes over time; keep it in `.sql` files the DBA can edit and review. Put every static statement in `src/database/sql/*.sql` (or `db/` migration/delta when it is a schema change) and load it with the SQL loader (`load_named_sql` / `load_sql`).
+**Do not** leave SQL as Python string literals in application code (stores, reports, workers) — **including one-liners**. SQL changes over time; keep it in `.sql` files so the text can be edited and reviewed. Put every static statement in `src/database/sql/*.sql` (or `db/` migration/delta when it is a schema change) and load it with the SQL loader (`load_named_sql` / `load_sql`).
 
 | Own | Where |
 |-----|--------|
-| **DBA / database lane** | Statement text, schema, indexes, upserts, report queries as `.sql` files |
+| **Statement text** | Schema, indexes, upserts, and report queries as `.sql` files |
 | **Python store / UI** | Call the named statement, map rows, handle errors — not invent SQL strings in-line |
 
 **Allowed exceptions (narrow):** only SQL that **cannot** be a static file — e.g. identifier quoting via psycopg `sql.Identifier` / `sql.SQL`, or a WHERE clause assembled from a fixed allow-list of fragments with a file template (`__WHERE__`). User or config text must never be concatenated into SQL.
 
 **Loader duties:** resolve paths only under `sql/` (no traversal); sanitize human-edited files (encoding, BOM, nulls, empty); **cache** file text after first read. **Preload** (`preload_sql_files`, once per process on schema ensure): one **CODE** start/end pair for the batch — no per-file lines. **Execute** (`log_sql_execute`): tag **SQL** (level 15, between DEBUG and INFO) with file name + redacted binds. Visible at Log Level **DEBUG** or **SQL**, not at **INFO**. Never log the application_log insert itself (recursion).
 
-**Why:** Reviewers and the DBA can see and change queries without spelunking Python. One-liners drift just like multi-line blocks.
+**Why:** Reviewers can see and change queries without spelunking Python. One-liners drift just like multi-line blocks.
 
 **Rules**
 
@@ -545,7 +545,7 @@ Before finishing a task (feature, fix, or refactor) — code **and** docs:
 
 **Documentation** (same commit series as code — see [PROCESS.md](PROCESS.md) §3 and [AGENTS.md](../AGENTS.md))
 
-- [ ] **Change summary** written for the human (AGENTS.md handoff template). When the session finishes: push the topic branch, open a PR (or merge), remove the worktree ([PROCESS.md](PROCESS.md) § Parallel sessions).
+- [ ] **Change summary** written for the human ([PROCESS.md](PROCESS.md) § Handoff to human). When the session finishes: push the topic branch, open a PR (or merge), remove the worktree ([PROCESS.md](PROCESS.md) § Parallel sessions).
 - [ ] [Change_Log.md](Change_Log.md) row when behavior, schema, or user-facing output changed (**Why** / **What** / **Benefit**; **Shot:** when a tab/chrome paint changed — PROCESS § Change_Log screenshots).
 - [ ] [ToDo.md](ToDo.md) whenever the task involved an open ToDo item — completed parent block → [ToDo_Completed.md](ToDo_Completed.md); new work → open item added. **Required if ToDo was in scope;** not optional.
 - [ ] This file **only** when a new **rule** or workflow norm changed — **not** for small bug fixes or routine features.

@@ -113,7 +113,7 @@ Uncle Bob (Matt Pocock 2026-08-19) ran a **Complexity Score** (complexity × cov
 - Versioned SQL or migration tool of choice.
 - Document apply order in a short runbook.
 - Backup before destructive migrations.
-- **SQL text lives in files** (Coding_Standards § SQL lives in files): multi-line queries and DDL are `.sql` (or migration files), not string literals in app code. The DBA / database lane owns the statement text; app code loads and runs it.
+- **SQL text lives in files** (Coding_Standards § SQL lives in files): queries and DDL are `.sql` (or migration files), not string literals in app code. App code loads and runs that text.
 - Same change series: delta/migration + embedded/schema SQL the app applies + docs (Schema / runbook) when the live schema moves.
 
 ## Parallel sessions (mandatory)
@@ -125,7 +125,6 @@ Uncle Bob (Matt Pocock 2026-08-19) ran a **Complexity Score** (complexity × cov
 - **NEVER** edit the main working tree when any other Grok session is active.
 - Every **concurrent** or **long-running** task **MUST** start in a dedicated git worktree + unique branch.
 - If this session is **already** in its worktree and the first message is a continuation → stay. No pick.
-- Subagents that **touch files**: always `isolation: worktree`. Read-only children may pass module `cwd`. `cwd` and worktree isolation are mutually exclusive; when isolated, paste the nested `AGENTS.md` working set into the spawn prompt.
 - Stage **only** this session’s files. Never `git add -A`.
 
 **VS Code Grok Build** has no `--worktree` launch switch. **Before the first edit**, if this session is in the primary tree (or another session’s worktree), confirm with a **purple multi-pick** — same shape as the old branch pick:
@@ -196,4 +195,4 @@ Short: what changed · files · how to verify · docs · branch pushed + PR (or 
 
 ## Solo / small team (keep light)
 
-See [Project.md](../Project.md) § Lightweight practices. In short: shippable main, read your own diff, lock dependencies, update ToDo/Change_Log with the code, multi-agent only when the work tree is large and exclusive.
+See [Project.md](../Project.md) § Lightweight practices. In short: shippable main, read your own diff, lock dependencies, update ToDo/Change_Log with the code.

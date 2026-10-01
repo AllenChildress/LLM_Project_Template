@@ -10,8 +10,8 @@ Portable entry point. **Copy into each app** and replace the architecture paragr
 
 **Never load the entire documentation set.** Open only:
 
-1. Files listed in the **active** nested `AGENTS.md` for the directory you are editing, and/or  
-2. Docs named in a **spawned subagent’s** instructions.
+1. Files listed in the **active** nested `AGENTS.md` for the directory you are editing.
+2. Docs the task names.
 
 ## Start here (on demand)
 
@@ -33,7 +33,6 @@ Run `git status` and `git worktree list` before editing. Stage **only** this ses
 - Every concurrent or long-running task **MUST** start in a dedicated git worktree + unique branch.
 - **VS Code Grok Build (no launch switches):** before the first edit, confirm the worktree with a **purple multi-pick** — same shape as the old branch pick. Recommended **`New worktree wip/<short-topic>`** from the first message goes **first**, marked **`(Recommended)`**. Include **Stay in this tree**. The tool already adds **Other**.
 - **CLI / TUI (optional):** `grok --worktree=<short-descriptive-name> --ref main "..."` — skip the pick when this session already lives in that worktree.
-- Subagents that touch files: always request `isolation: worktree`. (`cwd` cannot combine with that — put the nested `AGENTS.md` working set in the spawn prompt.)
 - Commit early and often on the worktree branch. Do not leave uncommitted changes that another session could see.
 - Never assume shared state, open files, or previous multi-select answers from another session.
 - **Database changes are single-threaded.** Worktrees share one database when they copy the same `.env`. Before DDL, migrations, or store schema work: `git worktree list`. This session must be the **only topic worktree** (primary checkout on `main` may remain). If another worktree is in play, **stop** and tell the human. Do not migrate while another session can use the database.
@@ -50,37 +49,20 @@ Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions.
 - Centralize errors; redact secrets in logs.
 - Rule of Three before extracting shared helpers.
 - Prefer domain/session objects over new parallel maps.
-- **Multi-line SQL in `.sql` files** (DBA/schema lane owns text); app code loads/runs — see Coding_Standards.
+- **SQL lives in `.sql` files**; app code loads and runs it — see Coding_Standards.
 - Tests under `tests/{unit,integration,smoke}/`. **CI/CD stays dormant** until PROCESS § CI / pytest unfold (then one purple pick — do not scaffold GitHub Actions or pytest-testmon on day one).
 - Docs hygiene with the code: Change_Log / ToDo / Lessons when PROCESS requires it.
 - Commits: clear subject; optional trailers `Assisted-by: Grok Build`.
 
-## Orchestration (optional multi-agent)
+## How this session works
 
-Main session = orchestrator. Spawn specialists only for **large exclusive** work. File-touching children: `isolation: worktree`.
-
-| Prompt mainly about… | Spawn (example) |
-|----------------------|-----------------|
-| Schema / SQL | `dba` |
-| UI / presentation | `ui` |
-| Tests | `tester` |
-| Domain meaning | `domain` |
-| External API | `integration` |
-| Secrets | `security` |
-| Docs only | `docs` |
-| Tiny fix / chat judgment | **main only** |
-
-See [docs/skills/General/Multi_Agent_Project_Setup.md](docs/skills/General/Multi_Agent_Project_Setup.md) if present.
-
-## Agent identity
-
-First line of each user-visible reply: `main:` or specialist name (`ui:`, `dba:`, …).
+This session does the work. Nested `AGENTS.md` files are extra reading lists for that folder. Replies start with the answer. No role label on the first line (`main:`, `dba:`, `ui:`, or any other).
 
 ## Always-on checklist
 
 | Question | Action |
 |----------|--------|
-| **New / concurrent / long-running session?** | Dedicated worktree + unique branch. **VS Code:** purple worktree pick before the first edit (Recommended `New worktree wip/<topic>` + Stay in this tree). **NEVER** edit the main working tree while another Grok session is active. File-touching subagents: `isolation: worktree`. |
+| **New / concurrent / long-running session?** | Dedicated worktree + unique branch. **VS Code:** purple worktree pick before the first edit (Recommended `New worktree wip/<topic>` + Stay in this tree). **NEVER** edit the main working tree while another Grok session is active. |
 | User-visible change? | Change_Log row (Why / What / Benefit) |
 | User-visible **view paint**? | Run the app, screenshot each modified view, `python scripts/promote_changelog_shot.py`, add **Shot:** — PROCESS § Screenshots |
 | Click-path tutorial (`docs/tutorial/`)? | Same series as UI or backend-that-affects-UI: update the matching tutorial page (PROCESS § Screenshots) |

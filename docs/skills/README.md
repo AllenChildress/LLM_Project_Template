@@ -5,7 +5,7 @@
 
 | Folder | Contents |
 |--------|----------|
-| [General/](General/) | Portable playbooks (multi-agent setup, etc.) |
+| [General/](General/) | Portable playbooks, added when a task needs one |
 | [Domain/](Domain/) | Product/domain skills — empty in the template |
 
 ## Skills vs documentation
