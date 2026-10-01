@@ -4,14 +4,15 @@ Durable scars. Prefer **short rules** over novels.
 
 ## Grok multi-session
 
-- **Parallel sessions use worktrees (2026-08-25).** Concurrent and long-running tasks **must** use a dedicated worktree + unique branch. **Never** edit the main working tree while another session is active. Isolation is the worktree, not the branch name.
-- **VS Code Grok Build has no `--worktree` launch switch.** Before the first edit, purple-pick the worktree (same shape as the old branch pick). After **New worktree**, create it from `main`, copy gitignored locals, and **stop editing the primary tree** — the human opens that folder to continue. CLI/TUI may still use `grok --worktree=<name> --ref main`.
-- **Missing locals.** `git worktree add` copies the commit, not `.env` / tokens / caches. Copy those from the primary checkout before asking them to run the app.
-- **Always pass `main`.** `git worktree add PATH -b wip/topic` with no start-point inherits this folder’s HEAD.
+- **Grok managed worktrees, short-lived branches (2026-10-01).** Requires Grok Build **1.0.42 or newer**. One writer, short task: stay in the primary checkout; no worktree; no branch until the diff is worth keeping. Second writer or a long task: Grok managed worktree, detached, off current `main` (`grok -w --ref main` / `grok worktree create`). **Never** edit the primary checkout while another Grok session is editing. A Grok worktree does not create a branch. Do not `git worktree add -b wip/<topic>`.
+- **VS Code purple pick is for the second writer.** Recommended only in that case; label it a detached Grok worktree. One writer, short task: stay. After a worktree is created, **stop editing the primary tree**.
+- **Mandatory `wip/` worktree (2026-08-25) is superseded.** Isolation is the Grok worktree folder, not a long-lived `wip/` branch. Land: `git switch main && git pull --ff-only`, then branch only if the diff is worth keeping, squash-merge, delete local and remote branches, `grok worktree rm <id>`.
+- **Missing locals.** A detached checkout copies the commit, not `.env` / tokens / caches. Copy those from the primary checkout before asking them to run the app.
 - **Two independently opened chats cannot DM each other.** The human is the bus. Durable handoff is git.
-- **`checkout -b` still moves this folder.** Two chats here share one branch. Do not `checkout -b` in the primary tree to “make room.”
-- **One-folder lock (2026-08-17) is superseded.** That lock (stay in one folder, `checkout -b` here, worktree only if asked) is **reversed**. Do not follow it.
-- **Database changes are single-threaded.** Copied `.env` points every worktree at the same database. Before DDL / migrations: `git worktree list` — this session must be the only topic worktree. If another exists, stop.
+- **`checkout -b` still moves this folder.** Two chats here share one checkout. Do not `checkout -b` in the primary tree to “make room.”
+- **One-folder lock (2026-08-17) is superseded** for a **second writer**. One writer, short task still stays in the primary folder.
+- **Database changes are single-threaded.** Copied `.env` points every worktree at the same database. Before DDL / migrations: `git worktree list` — this session must be the only topic worktree. If another exists, stop. Idle leftover folders still count until removed.
+- **Finish pass.** `grok worktree list`, `git worktree list`, `git branch -vv`. A branch with no worktree and no open PR is trash.
 
 ## General (portable)
 

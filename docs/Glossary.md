@@ -16,9 +16,9 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 | **CI unfold** | Kit default: no GitHub Actions. When tests cross the PROCESS threshold, one purple pick to add canaries + testmon + a unit workflow. |
 | **Change_Log** | User-visible history (Why / What / Benefit). |
 | **ToDo** | Backlog; finished work leaves open columns. |
-| **Worktree** | A second **folder** of the same git repo, each with its own checked-out branch. Concurrent Grok sessions **must** use one. **VS Code:** purple-pick before the first edit, then `git worktree add PATH -b wip/<topic> main`. **CLI/TUI:** `grok --worktree=<name> --ref main`. Always pass **`main`**. |
+| **Worktree** | A Grok **managed** checkout (Grok Build **1.0.42 or newer**): detached at the base commit, **no branch**. One writer, short task: stay in the primary checkout. Second writer / long task: `grok -w --ref main` or `grok worktree create`. **VS Code:** purple pick recommended **only** in that second-writer case (label: detached Grok worktree). Do not `git worktree add -b wip/<topic>`. Ending a session does not remove it. `grok worktree rm` / `grok worktree gc --max-age 7d`. |
 | **Done** | Last line of a finished Grok session that was **not** pushed (abort / hold). |
-| **Push Complete** | Last line of a finished Grok session after the topic branch was pushed, a PR opened (or merged), and the worktree removed. |
+| **Push Complete** | Last line of a finished Grok session after the short-lived branch was pushed or squash-merged, local and remote branches deleted, and any managed worktree removed. |
 
 ## Libraries (common Python)
 

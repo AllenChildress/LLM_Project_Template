@@ -13,11 +13,19 @@ A **generic** VS Code / Grok Build starter kit: process, agents, docs hygiene, t
 ## Quick start
 
 1. Copy this folder (or clone) as the start of a new project **or** merge selected files into an existing repo.
-2. Install tools and extensions (see **[Environment setup](#environment-setup)** below).
+2. Install tools and extensions (see **[Environment setup](#environment-setup)** below). **Requires Grok Build 1.0.42 or newer.**
 3. Open the folder in VS Code + Grok Build.
 4. Read **[Project.md](Project.md)** — answer the intake questions (or paste them to the agent).
 5. Agent implements from the stubs under `docs/` and root `AGENTS.md`.
 6. Replace placeholders (`YOUR_APP`, `YOUR_NAME`) and delete sections you declined in intake.
+
+Requires Grok Build 1.0.42 or newer.
+1.0.5 reclaims idle checkouts under `~/.grok/worktrees` when safe and never deletes the last copy.
+1.0.19 adds `--worktree` to headless `grok -p`.
+1.0.42 adds `grok worktree create` (managed worktree, no session).
+A Grok worktree is a detached checkout at the base commit. It does not create a branch. Ending a session does not remove it. Land with ordinary git. Remove with `grok worktree rm` or `grok worktree gc --max-age 7d`.
+
+Parallel Git rules: [AGENTS.md](AGENTS.md) § Parallel Session Rules and [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions. One writer, short task: stay in the primary checkout. A second writer uses a Grok managed worktree (`grok -w --ref main` / `grok worktree create`). This kit does not support older Grok Build for that path.
 
 ## Environment setup
 
@@ -68,6 +76,7 @@ LLM_Project_Template/
   README.md                 # this file
   Project.md                # intake + skeleton + light practices
   AGENTS.md                 # session rules; nested files are folder reading lists
+  .grok/skills/             # auto-loaded by Grok Build (e.g. git-workflow-and-versioning)
   .vscode/extensions.json   # recommended extensions
   docs/
     PROCESS.md              # how work is done
@@ -81,7 +90,7 @@ LLM_Project_Template/
     Taste.md                # judgment / “who is the computer”
     changelog_shots/        # tracked JPEG thumbs for Change_Log
     skills/
-      README.md             # what belongs in skills vs docs
+      README.md             # on-demand playbooks (not auto-loaded)
       General/              # portable playbooks
       Domain/               # empty — project-specific skills later
   scripts/
@@ -101,7 +110,8 @@ LLM_Project_Template/
 | Kind | What it is | Lives |
 |------|------------|--------|
 | **Staff kit** | How *any* project is run with humans + agents | This template (copy into each app) |
-| **Skills** | Playbooks you paste/attach for a *task* (often domain) | `docs/skills/…` |
+| **Auto-loaded skills** | Grok loads these on every session | `.grok/skills/` (and `~/.grok/skills/`) |
+| **On-demand playbooks** | Paste/attach for a *task* (often domain) | `docs/skills/…` — this path is **not** auto-loaded |
 | **App docs** | This product’s Change_Log, schema, runbooks | App repo only |
 
 ## Improve the kit, then promote
