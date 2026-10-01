@@ -184,7 +184,7 @@ Command vs query (do not mix a mutation with a returned answer):
 - **Keep functions short** — one job, typically far under a screen. The **~500-line** split signal is for **files** (below), not functions. A 500-line function that returns one object still failed “small” and usually failed “one thing,” unless every inner line is a field of that same object and an extract would only restate `row.qty = payload["quantity"]`.
 - **Meaningful names** over abbreviations — `plan_minute_fetch_windows`, not `pmfw`.
 - **Few arguments** — more than three or four parameters is a signal to introduce a small options object or dataclass.
-- **Cyclomatic complexity (CC)** on new or changed functions: **target ≤ 10**, **too high > 15** (split or name a leave-whole exception). Same McCabe idea as a Tech Debt hotspot table. Uncle Bob **Complexity Score** (CC × coverage): human **< 4**, agents **6–8** — run that when coverage is in the loop; do not invent a second formula. See PROCESS § Cyclomatic complexity.
+- **Cyclomatic complexity (CC)** on new or changed functions: **target ≤ 10**, **too high > 15** (split or name a leave-whole exception). Same McCabe idea as a Tech Debt hotspot table. Uncle Bob **Complexity Score** (CC × coverage): human **< 4**, agents **6–8** — run that when coverage is in the loop; do not invent a second formula. See PROCESS § Cyclomatic complexity. CC does **not** catch a dense one-liner (a filtered comprehension is still CC 1). See **Dense one-liners** below — explain first; split only when a straightforward comment cannot name the line.
 
 ### Files
 
@@ -247,6 +247,23 @@ Non-trivial blocks need a short comment stating **why** the block exists (option
 - Guards and early returns whose reason is not obvious from names alone
 
 One line above the block is enough. Do not narrate every assignment.
+
+### Dense one-liners (explain first)
+
+Powerful, meaningful, clean one-liners are welcome. McCabe CC will not flag them (a filtered comprehension is still **CC 1**).
+
+**Priority:** put a **one-line English comment above** that states the outcome (and what a sentinel like `"?"` means). Split the line apart only when you cannot explain it in a straightforward way — the comment would have to walk through the syntax instead of naming the result.
+
+Triggers that need that comment (or a split if the comment fails):
+
+- Comprehension with an `if` filter
+- Nested ternary
+- `or []` / `or {}` inside a comprehension
+- Unpacking and discarding a field (`for tf, _why`)
+- A magic token (`"?"`, `0`) whose meaning is not a named constant on that line
+- Lambda default-args used to freeze loop values (`lambda d=done: …`)
+
+Do not narrate `x = x + 1`.
 
 ### Lessons-learned patches (redundant on purpose)
 
@@ -503,6 +520,7 @@ Before finishing a task (feature, fix, or refactor) — code **and** docs:
 - [ ] No third copy of the same kwargs/tuple/dict bundle across functions — that bundle is a named class (one instance), not more kwargs.
 - [ ] Errors route through the shared formatter.
 - [ ] New/changed classes and major functions have a one-line purpose comment.
+- [ ] Dense one-liners have a why-comment. Split only when a straightforward comment cannot name what the line does.
 - [ ] New/changed imports have inline purpose comments.
 - [ ] No new **file** approaches 500 lines without a split plan (or a documented “leave whole” reason from **Files**).
 - [ ] Smoke tests pass (`run_smoke_suite.py --tier fast`; add `db`/`live` when relevant).
