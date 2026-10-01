@@ -44,6 +44,20 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-01 — Dense one-liners get a why-comment first
+
+- **Files:** `docs/Coding_Standards.md`, Lessons
+- **Why:** A filtered comprehension is still cyclomatic complexity 1, so the CC gate never asked for a comment. Powerful clean one-liners are welcome; unexplained ones are not.
+- **What:** Rule **Dense one-liners (explain first)**. Comment the outcome. Split only when a straightforward comment cannot name the line.
+- **Benefit:** Improve code hygiene / documentation
+
+### 2026-09-30 — QTimer and data calls stay off the worker / window mix-up
+
+- **Files:** `docs/Coding_Standards.md`, Lessons
+- **Why:** Constructing `QTimer` on a worker (or parenting it to a window widget from that worker) logs a wrong-thread children warning. SQL on the window thread freezes the mouse.
+- **What:** Only the window thread constructs `QTimer`; workers marshal. The window never issues a data call (MVC: database / domain / view).
+- **Benefit:** Reliability / stability
+
 ### 2026-09-03 — Click-path tutorial stays current with UI
 
 - **Files:** `docs/PROCESS.md`

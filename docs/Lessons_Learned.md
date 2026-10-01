@@ -15,6 +15,7 @@ Durable scars. Prefer **short rules** over novels.
 
 ## General (portable)
 
+- **Dense one-liners (2026-10-01).** Powerful clean one-liners are welcome. McCabe CC will not flag them (a filtered comprehension is still CC 1). Put a one-line English comment that names the **outcome**. Split only when that comment cannot be straightforward. Coding_Standards **Dense one-liners (explain first)**.
 - Incomplete renames across UI stacks thrash more than file renames on disk — finish one vocabulary (e.g. page_key) in one series.
 - Wide Markdown tables can break Preview; prefer vertical entries for long logs.
 - Agent context: open only the docs the task needs, not the whole tree.
@@ -28,4 +29,5 @@ _(Move product- or domain-specific lessons here or into the app repo — keep th
 
 ## Environment
 
-_(OS, Qt, conda, path traps, etc.)_
+- **QTimer belongs on the window thread (2026-09-30).** A `QTimer` is a window object, like a widget. Only the GUI / window thread may construct one. A worker must not call `QTimer(...)` or parent a timer to a widget on another thread. Marshal with a queued helper (`ui_single_shot` or equivalent). Do not fall back to running the GUI callback on the worker if marshal fails. Log: `Cannot create children for a parent that is in a different thread` (a logger that eats the words “for a” can look like ticker “A”).
+- **The window thread does not search data (2026-09-30).** Date searches, hole scans, and store/SQL on the paint / mouse thread freeze the cursor until the function returns. Workers load domain objects and DataFrames; the window only applies them. MVC: database / domain / view — a database change must not force UI edits.

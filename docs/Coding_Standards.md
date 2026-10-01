@@ -432,6 +432,20 @@ New heavy paths (import scripts run off-UI; long UI jobs still hourglass). Prefe
 
 Give the user time to finish a gesture before firing expensive work (chart reload, prefetch, DB/API fetch). Use a **named constant** and a **single-shot `QTimer`** that restarts on each event — do not hard-code magic milliseconds at call sites.
 
+**Qt timers:** only the window thread constructs `QTimer`. Workers marshal with a queued helper (`ui_single_shot` or equivalent). Do not parent a timer to a GUI widget from a worker, and do not fall back to running the callback on the worker when marshal fails.
+
+## UI thread vs data (MVC)
+
+The paint / mouse thread never runs date searches, hole scans, or store/SQL. It reads domain objects and DataFrames already in memory. Workers populate those objects. A presenter may **submit** work and **apply** the result.
+
+| Layer | Job |
+|-------|-----|
+| **Model** | Persist and retrieve rows. SQL in files. |
+| **Domain** | Turn frames into meaning. Populate what the UI will read. |
+| **View** | Paint and clicks. Never issue a data call. |
+
+A database change stays in the model. The UI keeps the same bundle.
+
 
 ### Attention chrome (user needs to look here)
 
