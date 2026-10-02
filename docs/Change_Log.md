@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-01 — Pin Grok 1.0.42 worktrees and vendor git skill
+
+- **Files:** `.grok/skills/git-workflow-and-versioning/SKILL.md`, `AGENTS.md`, `README.md`, `docs/PROCESS.md`, `docs/skills/README.md`, `docs/Glossary.md`, `docs/Lessons_Learned.md`, `docs/Coding_Standards.md`
+- **Why:** Git followed a mandatory `wip/` worktree. A second writer should use a Grok managed worktree, and the branch should die with the merge.
+- **What:** Requires Grok Build 1.0.42 or newer. One writer, short task: primary checkout, no worktree, no branch until the diff is worth keeping. Second writer: `grok -w --ref main` / `grok worktree create` (detached). Vendored git skill unchanged; this kit’s worktree and branch-delete rules override it.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-10-01 — Remove the specialist roster
 
 - **Files:** `AGENTS.md`, `Project.md`, `README.md`, `docs/PROCESS.md`, `docs/Coding_Standards.md`, `docs/Lessons_Learned.md`, `docs/skills/README.md`, `docs/skills/General/Multi_Agent_Project_Setup.md` (deleted)

@@ -6,7 +6,7 @@ How humans and agents work on **any** project that uses this staff kit.
 
 1. **Outcome-level work** — design, implement, smoke, document without re-teaching process each time.
 2. **Docs with the code** — same change series as behavior.
-3. **When a session finishes:** push the topic branch, open a PR (or merge if the human asked to merge), then remove the worktree. Pushing a topic branch is not a merge to `main`.
+3. **When a session finishes:** `git switch main && git pull --ff-only`. If the diff is worth keeping, branch off that `main`, commit, squash-merge, delete the local branch and the remote branch. Then `grok worktree rm <id>` if this session used a managed worktree. Do not delete the primary checkout.
 4. **Short answers** to humans; completeness is in files and tests, not essay chat.
 
 ## Change_Log
@@ -118,28 +118,40 @@ Uncle Bob (Matt Pocock 2026-08-19) ran a **Complexity Score** (complexity × cov
 
 ## Parallel sessions (mandatory)
 
-**Lock:** parallel Grok sessions use **isolated git worktrees**, not a shared primary checkout. A branch name is not isolation — two chats in one folder share one checkout. `checkout -b` in the second chat **moves** the first and mixes uncommitted files.
+Requires Grok Build 1.0.42 or newer.
+1.0.5 reclaims idle checkouts under `~/.grok/worktrees` when safe and never deletes the last copy.
+1.0.19 adds `--worktree` to headless `grok -p`.
+1.0.42 adds `grok worktree create` (managed worktree, no session).
+A Grok worktree is a detached checkout at the base commit. It does not create a branch. Ending a session does not remove it. Land with ordinary git. Remove with `grok worktree rm` or `grok worktree gc --max-age 7d`.
+
+Git workflow detail: read [`.grok/skills/git-workflow-and-versioning/SKILL.md`](../.grok/skills/git-workflow-and-versioning/SKILL.md).
+Second-writer worktree rules and branch-delete rules in this file override that skill.
+Skill owns commit shape, message style, and PR detail. This file owns when a worktree exists and that the branch dies with the merge.
+
+**Lock:** two chats in one folder share one checkout. A Grok worktree is a **detached** checkout at the base commit. It is not `git worktree add -b wip/<topic>`. Never edit the primary checkout while another Grok session is editing.
 
 ### Start
 
-- **NEVER** edit the main working tree when any other Grok session is active.
-- Every **concurrent** or **long-running** task **MUST** start in a dedicated git worktree + unique branch.
+- **One writer, short task:** stay in the primary checkout. No worktree. No branch until the diff is worth keeping.
+- **Second writer, or a task long enough that another writer may start:** Grok managed worktree, detached, off current `main`.
+  - **CLI:** `grok -w --ref main`
+  - **No session yet:** `grok worktree create`
+  - **VS Code:** purple pick, **recommended only in this case**. Label it as a detached Grok worktree. Do not use `git worktree add -b wip/<topic>`.
+- **Subagents that edit files:** `isolation: worktree`. Read-only children need no worktree.
 - If this session is **already** in its worktree and the first message is a continuation → stay. No pick.
 - Stage **only** this session’s files. Never `git add -A`.
 
-**VS Code Grok Build** has no `--worktree` launch switch. **Before the first edit**, if this session is in the primary tree (or another session’s worktree), confirm with a **purple multi-pick** — same shape as the old branch pick:
+**VS Code Grok Build** — purple multi-pick **only** when a second writer (or a long task) needs a worktree. Recommended first, marked **`(Recommended)`**:
 
 | Human picks | Agent does |
 |-------------|------------|
-| **`New worktree wip/<short-topic>` (Recommended)** | `git worktree add "<parent>\<RepoName>_<topic>" -b wip/<topic> main` (always pass **`main`**). Copy gitignored runtime (`.env`, tokens, caches) from the primary checkout. Tell them the folder path. **Do not keep editing the primary tree** — they continue by opening that folder in VS Code (or a new Grok chat there). |
-| **Stay in this tree** | Stay only if this is already the session’s worktree. If this is the primary tree and another Grok session is active → **stop**. Do not `checkout -b` here to “make room.” |
-| **Other** | Name they typed: same create path as New worktree. |
-
-**CLI / TUI (optional):** when they can pass flags, `grok --worktree=<short-descriptive-name> --ref main "<prompt>"` already lives in the worktree — skip the pick. Use `--worktree=` (with `=`) so the prompt is not swallowed as the label.
+| **Detached Grok worktree (Recommended)** | Use a Grok managed worktree off current `main` (`grok -w --ref main` / `grok worktree create`). Tell them the folder path. **Do not** run `git worktree add -b wip/<topic>`. **Do not keep editing the primary tree.** |
+| **Stay in this tree** | Stay only for one writer, short task, in the primary checkout, with no other Grok session editing. If this is the primary tree and another Grok session is editing → **stop**. Do not `checkout -b` here to “make room.” |
+| **Other** | Name they typed: same create path as Detached Grok worktree. |
 
 ### During
 
-- Commit **early and often** on the worktree branch. Do not leave uncommitted changes that another session could see.
+- Do not leave uncommitted changes that another session could see in a shared checkout.
 - Never assume shared state, open files, or previous multi-select answers from another session.
 
 ### Database (single-threaded)
@@ -171,11 +183,11 @@ If a permission / multi-select **still times out** (old session started before t
 
 When finished:
 
-1. Commit remaining work on the worktree branch.
-2. **Push** the branch.
-3. Open a **PR** (or **merge** if the human asked to merge). Pushing a topic branch is not a merge to `main`.
-4. **Remove** the worktree (`git worktree remove <path>` or `grok worktree rm`). Never delete the primary checkout.
-5. Last line: `Push Complete`. Use `Done` only when work is finished locally and **not** pushed (abort / hold).
+1. `git switch main && git pull --ff-only`.
+2. If the diff is worth keeping: branch off that `main`, commit (stage only this session’s files), squash-merge, delete the local branch and the remote branch. A detached worktree that dies is a folder, not a branch.
+3. After merge: `grok worktree rm <id>` if this session used a managed worktree. Do not delete the primary checkout.
+4. Finish pass: `grok worktree list`, `git worktree list`, `git branch -vv`. A branch with no worktree and no open PR is trash. Idle worktrees count until removed.
+5. Last line: `Push Complete` when the PR is open or landed. Use `Done` only when work is finished locally and **not** pushed (abort / hold).
 
 ### Wrong base (no unique commits)
 
@@ -185,13 +197,13 @@ git reset --hard main
 git stash pop
 ```
 
-If the worktree has unique commits to keep: `git rebase main` in that folder (not reset).
+If the checkout has unique commits to keep: `git rebase main` in that folder (not reset). A detached worktree that dies is a folder, not a branch.
 
 Agent checklist: root [AGENTS.md](../AGENTS.md) § Parallel Session Rules.
 
 ## Handoff to human
 
-Short: what changed · files · how to verify · docs · branch pushed + PR (or merge) · worktree removed.
+Short: what changed · files · how to verify · docs · branch landed and deleted · worktree removed if any.
 
 ## Solo / small team (keep light)
 
