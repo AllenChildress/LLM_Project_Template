@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-07 — Do not hardcode paths, URLs, or file names
+
+- **Files:** `docs/Coding_Standards.md`, `AGENTS.md`
+- **Why:** A clone-folder guess only works on one PC. Allen does not authorize hardcoded paths, URLs, or file names.
+- **What:** A priori lock: those values live in `.env` / config or are derived. Rule of Three “once is fine” does not cover them.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-10-01 — Pin Grok 1.0.42 worktrees and vendor git skill
 
 - **Files:** `.grok/skills/git-workflow-and-versioning/SKILL.md`, `AGENTS.md`, `README.md`, `docs/PROCESS.md`, `docs/skills/README.md`, `docs/Glossary.md`, `docs/Lessons_Learned.md`, `docs/Coding_Standards.md`
