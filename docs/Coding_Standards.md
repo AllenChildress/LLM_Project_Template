@@ -32,6 +32,30 @@ Every reader should understand **why** code exists and **what** it does without 
 5. Agents: if a task would push bookkeeping onto Allen, stop and implement the automation instead.
 
 
+### Do not hardcode values that will change (Allen lock)
+
+**Allen does not authorize hardcoded paths, URLs, file names, hostnames, ports, or other literals that are likely to change.** Do not ask for a one-off exception. Put the value where another machine can set it, or derive it.
+
+A string that is wrong on a second PC, a second clone, or next year does not belong in Python (or SQL) as a literal — **even once**. Rule of Three “once is fine inline” does **not** apply here.
+
+| Kind | Lives |
+|------|--------|
+| Machine paths, token files, interpreter, log files | `.env` / Settings (absolute after first resolve). `.env.example` documents the **key** and a relative placeholder — never `C:\Users\...` |
+| Product catalogs | Tracked config JSON / Settings |
+| Clone root, linked worktree | Derive (`Path(__file__)`, `git rev-parse`) |
+| Vendor API / OAuth / portal URLs, host, port | `.env` key; default placeholder only in `.env.example` |
+
+| Do | Don’t |
+|----|--------|
+| Absolute file path in `.env` (`TOKEN_PATH=…`) | `Projects/YourApp` or `C:\Users\Allen\...` in `src/` |
+| Read callback / API base URL from `.env` | Paste a vendor `https://…` into a helper as the only source |
+| Name this repo’s own modules and shipped `sql/*.sql` files | Invent a second runtime filename in code (token path, log path, Desktop dump folder) |
+
+**Not this rule:** Python package names in this repo, test `tmp_path` fixtures, and protocol tokens required to *validate* a value the user already set (`https` as a scheme check). Those are this codebase, not this computer.
+
+If a new runtime location appears: add the `.env` / config key, persist it, document the key in `.env.example`. Do not bake one person’s folder layout into the program.
+
+
 ### Tradition vs dead peer pressure
 
 **Continuity has value.** Momentum, shared habits, and “we already know this path” help teams ship. Some people (structure/process-first temperaments) need that ballast. Respect it: do not thrash names or fences for sport.
@@ -282,7 +306,7 @@ Applies to **helpers**, **literals**, **repeated magic values**, and the **same 
 
 | Count | What to do |
 |-------|------------|
-| **Once** | Fine inline. |
+| **Once** | Fine inline — **except** paths, URLs, file names, hosts, ports, and other values that will change ([Do not hardcode](#do-not-hardcode-values-that-will-change-allen-lock)). |
 | **Twice** | Duplication is OK for tiny snippets (about 1–2 lines) or one-off literals. |
 | **Three** | Strong signal to centralize (shared helper, named constant, or **named instance**). |
 | **Four or more** | **Must** be a named constant, helper, or class, scoped **as closely as possible** (function → module → package). Do not leave the same string/number/tuple copy-pasted. |
@@ -542,6 +566,7 @@ Before finishing a task (feature, fix, or refactor) — code **and** docs:
 - [ ] No new permanent shims; any temporary shim has a removal path in ToDo or the PR plan.
 - [ ] After a collaborator extract: remaining call sites retargeted and old `@property` names **deleted** in the same series (leftover-name aliases only if the app would otherwise fail to run).
 - [ ] No new warning squelch (filter/collapse/demote stderr or “ignore WARN”); root cause fixed or process re-engineered (see **Warnings are almost always a deeper problem**).
+- [ ] No new hardcoded path, URL, runtime file name, host, or port in product code (see **Do not hardcode**). Value is `.env` / config or derived.
 
 **Documentation** (same commit series as code — see [PROCESS.md](PROCESS.md) §3 and [AGENTS.md](../AGENTS.md))
 

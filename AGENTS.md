@@ -69,6 +69,7 @@ Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions.
 - Type hints on public functions; explicit imports.
 - Centralize errors; redact secrets in logs.
 - Rule of Three before extracting shared helpers.
+- **Do not hardcode** paths, URLs, runtime file names, hosts, or ports (Allen lock — no exception grant). `.env` / config / derive. [Coding_Standards.md](docs/Coding_Standards.md).
 - Prefer domain/session objects over new parallel maps.
 - **SQL lives in `.sql` files**; app code loads and runs it — see Coding_Standards.
 - Tests under `tests/{unit,integration,smoke}/`. **CI/CD stays dormant** until PROCESS § CI / pytest unfold (then one purple pick — do not scaffold GitHub Actions or pytest-testmon on day one).
@@ -93,6 +94,7 @@ This session does the work. Nested `AGENTS.md` files are extra reading lists for
 | New / changed application code? | Cyclomatic complexity on touched functions — **CC ≤ 10** target, **CC > 15 too high** (PROCESS § Cyclomatic complexity) |
 | Non-obvious fix? | Lessons_Learned |
 | Database / schema change? | Single-threaded: `git worktree list` — this session must be the only topic worktree, then migrate. |
+| **Hardcoded path, URL, file name, host, or port?** | **Stop.** Put it in `.env` / config or derive it. Allen does not authorize one-off literals. [Coding_Standards.md](docs/Coding_Standards.md) **Do not hardcode**. |
 | Secrets? | Never commit |
 
 ## Do not commit
