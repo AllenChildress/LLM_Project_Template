@@ -34,6 +34,10 @@ Judgment, not font choice.
 
 Don’t make the human do work the computer should have finished (mapping aliases, re-entering known prefs, re-applying settings every paint).
 
+## Finish the ask
+
+Complete what the human asked this session. A red pytest is a blocker: **fix it this session or discuss with the human**. Do not push it behind `SHORTFALL`. Proven pre-existing still needs an owner this turn (they fix it, or this session owns the fix). PROCESS § Tests.
+
 ## Does the user benefit?
 
 Before opportunistic work (“the hardware can do it”), ask whether the user benefits **right now**.

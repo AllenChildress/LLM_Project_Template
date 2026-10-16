@@ -117,6 +117,7 @@ Before removing, short-circuiting, or “simplifying” a guard, gate, timer, or
 | Document *expected vendor noise* only when proven harmless **and** still surface it (full text in logs, no drop of other lines) | Assume “exit code 0 ⇒ ignore stderr” |
 | Gather evidence (especially **log hit %**) and **email the vendor** with user-base impact (time and/or dollars when you can) | File “it’s noise” locally and never tell the vendor |
 | Treat repeated production warnings as **P1 design debt** | Ship “we’ll watch it” without a ToDo owner and exit criteria |
+| A local pytest **FAIL**: **do not push / do not merge**. Fix it this session or discuss with the human. Proven pre-existing: name who caused it this turn; they-fix or we-own-and-fix | Disclose FAIL then land; wrap it as `SHORTFALL`; leave a pre-existing red parked |
 
 **Rule of thumb:** squelching or ignoring warnings will **~99% of the time** become a production-down issue later. Prefer changing the architecture (e.g. dump format, API flow, schema ownership) so the tool has nothing left to warn about — not teaching the operator to look away.
 

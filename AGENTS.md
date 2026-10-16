@@ -52,7 +52,7 @@ Skill owns commit shape, message style, and PR detail. This file owns when a wor
 - **Database changes are single-threaded.** Worktrees share one database when they copy the same `.env`. Before DDL, migrations, or store schema work: `git worktree list`. This session must be the **only topic worktree** (primary checkout on `main` may remain). If another worktree is in play, **stop** and tell the human. Do not migrate while another session can use the database.
 - Secrets: never commit `.env`, tokens, dumps, or local override configs.
 
-**Land (both cases):** `git switch main && git pull --ff-only`. If the diff is worth keeping, branch off that `main`, commit, squash-merge, delete the local branch and the remote branch. A detached worktree that dies is a folder, not a branch.
+**Land (both cases):** `git switch main && git pull --ff-only`. If the diff is worth keeping **and required tests are green**: branch off that `main`, commit, squash-merge, delete the local branch and the remote branch. A known pytest FAIL does not land — fix it this session or discuss with the human. A detached worktree that dies is a folder, not a branch.
 
 **After merge:** `grok worktree rm <id>`. Do not delete the primary checkout.
 
@@ -91,6 +91,7 @@ This session does the work. Nested `AGENTS.md` files are extra reading lists for
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
 | Testing past the kit stub? | If ≥25 unit tests, a suite runner, or the human asked for CI → **one** purple pick to unfold Stock_Data-style pytest (PROCESS § CI / pytest unfold). Do not unfold silently. |
+| **Known pytest FAIL?** | **Do not push. Do not merge.** Fix it this session, or stop and discuss with the human. Proven pre-existing: name who caused it this turn; they fix it or this session owns the fix. `SHORTFALL` / “unrelated” / “the other tier passed” are not waivers. [PROCESS.md](docs/PROCESS.md) § Tests. |
 | New / changed application code? | Cyclomatic complexity on touched functions — **CC ≤ 10** target, **CC > 15 too high** (PROCESS § Cyclomatic complexity) |
 | Non-obvious fix? | Lessons_Learned |
 | Database / schema change? | Single-threaded: `git worktree list` — this session must be the only topic worktree, then migrate. |
