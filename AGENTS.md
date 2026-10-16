@@ -18,6 +18,7 @@ Portable entry point. **Copy into each app** and replace the architecture paragr
 | When | Open |
 |------|------|
 | Process / commits | [docs/PROCESS.md](docs/PROCESS.md) |
+| Judgment / leave it better | [docs/Taste.md](docs/Taste.md) |
 | Style / errors / size | [docs/Coding_Standards.md](docs/Coding_Standards.md) |
 | Backlog | [docs/ToDo.md](docs/ToDo.md) |
 | Surprises | [docs/Lessons_Learned.md](docs/Lessons_Learned.md) |
@@ -66,6 +67,7 @@ Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions.
 
 ## Global coding standards (short)
 
+- **Leave the code better than you found it** (Scout outdoor code). Slice is as good or better (bugs, speed, clutter, reliability). [Taste.md](docs/Taste.md).
 - Type hints on public functions; explicit imports.
 - Centralize errors; redact secrets in logs.
 - Rule of Three before extracting shared helpers.
@@ -91,6 +93,7 @@ This session does the work. Nested `AGENTS.md` files are extra reading lists for
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
 | Testing past the kit stub? | If ≥25 unit tests, a suite runner, or the human asked for CI → **one** purple pick to unfold Stock_Data-style pytest (PROCESS § CI / pytest unfold). Do not unfold silently. |
+| **Leave the code better?** | Slice is as good or better (bugs, speed, clutter, reliability). Knowingly worse does not ship. [Taste.md](docs/Taste.md). |
 | **Known pytest FAIL?** | **Do not push. Do not merge.** Fix it this session, or stop and discuss with the human. Proven pre-existing: name who caused it this turn; they fix it or this session owns the fix. `SHORTFALL` / “unrelated” / “the other tier passed” are not waivers. [PROCESS.md](docs/PROCESS.md) § Tests. |
 | New / changed application code? | Cyclomatic complexity on touched functions — **CC ≤ 10** target, **CC > 15 too high** (PROCESS § Cyclomatic complexity) |
 | Non-obvious fix? | Lessons_Learned |

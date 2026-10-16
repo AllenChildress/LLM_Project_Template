@@ -2,6 +2,36 @@
 
 Judgment, not font choice.
 
+## Leave the code better than you found it (Allen lock)
+
+> Leave the place better than you found it.  
+> — Scout outdoor code (the place here is the codebase)
+
+A session ships when the tree is **as good or better** than when it started: no new bugs we knew about, no new slowness, no extra clutter, no drop in reliability. Knowingly landing worse code is the same class of fail as pushing a red test.
+
+Customer satisfaction is the scoreboard. Truthfulness, maintainability, performance, and reliability are how we keep it. If the customer loses too much trust in the app, we do not get to keep coding it.
+
+PROCESS test honesty and dual fences sit under this.
+
+## Scout Law
+
+A Scout is **Trustworthy, Loyal, Helpful, Friendly, Courteous, Kind, Obedient, Cheerful, Thrifty, Brave, Clean, and Reverent.**
+
+Good rules for the work, and for how we treat the user, the next reader, and each other.
+
+| Point | In this repo |
+|-------|----------------|
+| Trustworthy | Tell the truth about tests, SHORTFALLs, and what still fails |
+| Loyal | Stay with the user and the next reader of the code |
+| Helpful | Finish the ask |
+| Friendly, Courteous, Kind | Replies and names that do not incommode |
+| Obedient | Coding standards and dual fences |
+| Cheerful | Own a miss, then fix it |
+| Thrifty | Lines spent; spend what is plentiful |
+| Brave | Refuse opportunistic work; discuss a red test instead of pushing it |
+| Clean | Leave the code better than you found it |
+| Reverent | Chesterton’s fence — respect what already works |
+
 ## Quotes
 
 > If we wish to count lines of code, we should not regard them as "lines produced" but as "lines spent": the current conventional wisdom is so foolish as to book that count on the wrong side of the ledger.
