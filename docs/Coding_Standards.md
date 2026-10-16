@@ -10,6 +10,10 @@ Stock_Data splits: index `docs/Coding_Standards.md`, a priori `docs/coding_stand
 
 Every reader should understand **why** code exists and **what** it does without spelunking.
 
+### Leave the code better than you found it (Allen lock)
+
+Scout outdoor code: leave the place better than you found it. The place is this codebase. A slice ships when the tree is **as good or better** than when the session started (bugs, speed, clutter, reliability). Knowingly worse does not land. Customer satisfaction is the scoreboard; we do not get to keep coding if the customer loses too much trust. Full text and Scout Law: [Taste.md](Taste.md).
+
 ### Who is the computer here? (Allen’s motto)
 
 > **“Who is the computer here?”**  
@@ -554,6 +558,7 @@ Before finishing a task (feature, fix, or refactor) — code **and** docs:
 
 **Code**
 
+- [ ] Slice is **as good or better** than when we started (bugs, speed, clutter, reliability). Knowingly worse does not ship ([Taste.md](Taste.md) **Leave the code better**).
 - [ ] Net line count at call sites went down (or stayed flat with real duplication removed).
 - [ ] No third copy of the same 3+ line block remains.
 - [ ] No third copy of the same kwargs/tuple/dict bundle across functions — that bundle is a named class (one instance), not more kwargs.

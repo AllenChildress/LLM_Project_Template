@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-16 — Leave the code better than you found it
+
+- **Files:** `docs/Taste.md`, `docs/Coding_Standards.md`, `AGENTS.md`
+- **Why:** Truth, maintainability, performance, and reliability had no single umbrella. Knowingly landing worse code is how you lose the customer.
+- **What:** Scout outdoor code: leave the place better than you found it. A slice ships when the tree is as good or better (bugs, speed, clutter, reliability). Scout Law is the character list. Always-on pointer in Coding_Standards; full text in Taste.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-10-16 — Fix a red test or discuss it; do not push broken code
 
 - **Files:** `docs/PROCESS.md`, `docs/Coding_Standards.md`, `AGENTS.md`, `docs/Taste.md`, `docs/Lessons_Learned.md`
