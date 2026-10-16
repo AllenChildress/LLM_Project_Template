@@ -67,6 +67,15 @@ Non-obvious fixes, environmental traps, “never do X again.” Prefer durable r
 
 New behavior → at least unit unless the only risk is shell-level.
 
+**We do not push broken code (Allen lock 2026-10-16).** A pytest **FAIL** this session ran is a stop. **Fix it this session**, or **stop and discuss with the human** so it can be fixed. Do **not** `git push`, open a “ready” PR, or merge until that case is green **or the human in chat says push anyway**. `SHORTFALL:`, “unrelated,” “the other tier passed,” and “historical flake” are **not** waivers.
+
+**Pre-existing fail.** If you can **prove** the same case was already red on `main` before this session started, that is not this session’s regression. Same turn: **identify who caused it** (commit, author, session) and **get them to fix it**, **or this session takes ownership and fixes it**. Parking it as SHORTFALL-only is not allowed. Unproven → treat it as ours: fix or discuss with the human. Do not push.
+
+| Must | Must not |
+|------|----------|
+| Lead with **FAIL** if any pytest case failed | “All passed” / “suite green” while fails remain |
+| **Fix it or discuss with the human.** No push / no squash-merge while a required-suite case (or any case this session ran) is still red. Proven pre-existing: name the owner this turn; they fix it or this session owns the fix | Disclose FAIL then land; wrap it as `SHORTFALL`; leave a pre-existing red parked |
+
 ### CI / pytest unfold (dormant until a threshold)
 
 **Default is dormant.** A new app gets `tests/{unit,integration,smoke}/` and `python -m pytest tests/unit -q`. It does **not** get GitHub Actions, `pytest-testmon`, or a canary harness on day one. Do not copy Stock_Data’s `src/testing/` or `.github/workflows/` until the human says yes.
@@ -184,7 +193,7 @@ If a permission / multi-select **still times out** (old session started before t
 When finished:
 
 1. `git switch main && git pull --ff-only`.
-2. If the diff is worth keeping: branch off that `main`, commit (stage only this session’s files), squash-merge, delete the local branch and the remote branch. A detached worktree that dies is a folder, not a branch.
+2. If the diff is worth keeping **and required tests are green** ([§ Tests](#tests)): branch off that `main`, commit (stage only this session’s files), squash-merge, delete the local branch and the remote branch. A detached worktree that dies is a folder, not a branch. A known pytest FAIL → fix it or discuss with the human; `Done` (hold) until then, not `Push Complete`.
 3. After merge: `grok worktree rm <id>` if this session used a managed worktree. Do not delete the primary checkout.
 4. Finish pass: `grok worktree list`, `git worktree list`, `git branch -vv`. A branch with no worktree and no open PR is trash. Idle worktrees count until removed.
 5. Last line: `Push Complete` when the PR is open or landed. Use `Done` only when work is finished locally and **not** pushed (abort / hold).

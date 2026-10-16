@@ -14,6 +14,12 @@ Durable scars. Prefer **short rules** over novels.
 - **Database changes are single-threaded.** Copied `.env` points every worktree at the same database. Before DDL / migrations: `git worktree list` — this session must be the only topic worktree. If another exists, stop. Idle leftover folders still count until removed.
 - **Finish pass.** `grok worktree list`, `git worktree list`, `git branch -vv`. A branch with no worktree and no open PR is trash.
 
+## Tests (portable)
+
+- **We do not push broken code (2026-10-16).** Stock_Data PR #188 landed Chart work while `--tier ui` was still red. The agent reported FAIL, called it SHORTFALL, and squash-merged. Honesty without a stop is not a gate.
+- Path: **fix it this session**, or **stop and discuss with the human** so it can be fixed. Proven pre-existing is not this session’s regression — same turn **identify who caused it** (commit/author/session) and **get them to fix it**, **or this session takes ownership and fixes it**. Parking it as SHORTFALL-only is not allowed.
+- Lock: PROCESS § Tests, Coding_Standards Warnings, AGENTS checklist **Known pytest FAIL?**
+
 ## General (portable)
 
 - **Dense one-liners (2026-10-01).** Powerful clean one-liners are welcome. McCabe CC will not flag them (a filtered comprehension is still CC 1). Put a one-line English comment that names the **outcome**. Split only when that comment cannot be straightforward. Coding_Standards **Dense one-liners (explain first)**.

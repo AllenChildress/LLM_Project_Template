@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-16 — Fix a red test or discuss it; do not push broken code
+
+- **Files:** `docs/PROCESS.md`, `docs/Coding_Standards.md`, `AGENTS.md`, `docs/Taste.md`, `docs/Lessons_Learned.md`
+- **Why:** Stock_Data PR #188 shipped a known `--tier ui` fail behind SHORTFALL. Honesty without a stop is not a gate. A pre-existing red still needs an owner this turn.
+- **What:** We do not push broken code. Path: fix it this session or stop and discuss with the human. Proven pre-existing: name who caused it; they fix it or this session owns the fix.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-10-07 — Do not hardcode paths, URLs, or file names
 
 - **Files:** `docs/Coding_Standards.md`, `AGENTS.md`
