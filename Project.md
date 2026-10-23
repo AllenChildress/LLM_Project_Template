@@ -79,7 +79,7 @@ App-specific docs (schema, runbooks, product ADRs) stay **outside** this kit onc
 2. **One Change_Log entry per user-visible change** (Why / What / Benefit). If a view/tab paint changed, add **Shot:** (PROCESS § Screenshots).
 3. **ToDo** updated when backlog items complete or cancel.
 4. **Module size:** prefer files under ~500 lines; split by purpose (not arbitrary chops).
-5. **Tests:** new behavior → unit first; cross-layer → integration; UI shell → smoke.
+5. **Tests:** every feature or fix ships with a test (bug fix fails first). Adopting an app: smoke that it starts, a capture script, then unit tests for the core logic. See [tests/README.md](tests/README.md).
 6. **Secrets:** never commit `.env`, tokens, dumps.
 7. **Generic vs specific:** kit files stay portable; product truth lives in the app repo.
 

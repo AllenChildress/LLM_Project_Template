@@ -74,7 +74,7 @@ Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions.
 - **Do not hardcode** paths, URLs, runtime file names, hosts, or ports (Allen lock — no exception grant). `.env` / config / derive. [Coding_Standards.md](docs/Coding_Standards.md).
 - Prefer domain/session objects over new parallel maps.
 - **SQL lives in `.sql` files**; app code loads and runs it — see Coding_Standards.
-- Tests under `tests/{unit,integration,smoke}/`. **CI/CD stays dormant** until PROCESS § CI / pytest unfold (then one purple pick — do not scaffold GitHub Actions or pytest-testmon on day one).
+- Tests under `tests/{unit,integration,smoke}/`. Every feature or fix ships with a test ([tests/README.md](tests/README.md)). **CI/CD stays dormant** until PROCESS § CI / pytest unfold (then one purple pick — do not scaffold GitHub Actions or pytest-testmon on day one).
 - Docs hygiene with the code: Change_Log / ToDo / Lessons when PROCESS requires it.
 - Commits: clear subject; optional trailers `Assisted-by: Grok Build`.
 
@@ -92,6 +92,7 @@ This session does the work. Nested `AGENTS.md` files are extra reading lists for
 | Click-path tutorial (`docs/tutorial/`)? | Same series as UI or backend-that-affects-UI: update the matching tutorial page (PROCESS § Screenshots) |
 | Backlog item? | Update ToDo |
 | New API / persistence / UI flow? | Test under `tests/` |
+| New feature, bug fix, or edit to untested code? | Ship a test with the change. Bug fix: a failing test first. Untested code you touch: a characterization test. Adopting an app: smoke that it starts, a capture script (GUI PNG or console text), then unit tests for the core logic. [tests/README.md](tests/README.md). |
 | Testing past the kit stub? | If ≥25 unit tests, a suite runner, or the human asked for CI → **one** purple pick to unfold Stock_Data-style pytest (PROCESS § CI / pytest unfold). Do not unfold silently. |
 | **Leave the code better?** | Slice is as good or better (bugs, speed, clutter, reliability). Knowingly worse does not ship. [Taste.md](docs/Taste.md). |
 | **Known pytest FAIL?** | **Do not push. Do not merge.** Fix it this session, or stop and discuss with the human. Proven pre-existing: name who caused it this turn; they fix it or this session owns the fix. `SHORTFALL` / “unrelated” / “the other tier passed” are not waivers. [PROCESS.md](docs/PROCESS.md) § Tests. |

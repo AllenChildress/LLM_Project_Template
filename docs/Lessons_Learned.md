@@ -16,6 +16,7 @@ Durable scars. Prefer **short rules** over novels.
 
 ## Tests (portable)
 
+- **State leak (2026-10-23).** Anything one test leaves behind that changes another test's result. Symptom: the test passes alone and fails in the full suite, or the other way around. Glossary **State leak**. Rules: PROCESS § Tests and [tests/README.md](../tests/README.md).
 - **We do not push broken code (2026-10-16).** Stock_Data PR #188 landed Chart work while `--tier ui` was still red. The agent reported FAIL, called it SHORTFALL, and squash-merged. Honesty without a stop is not a gate.
 - Path: **fix it this session**, or **stop and discuss with the human** so it can be fixed. Proven pre-existing is not this session’s regression — same turn **identify who caused it** (commit/author/session) and **get them to fix it**, **or this session takes ownership and fixes it**. Parking it as SHORTFALL-only is not allowed.
 - Lock: PROCESS § Tests, Coding_Standards Warnings, AGENTS checklist **Known pytest FAIL?**

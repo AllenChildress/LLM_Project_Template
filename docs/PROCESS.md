@@ -24,7 +24,7 @@ Goal: a visible **progression** of the UI, not a dump of error captures.
 
 1. Run the app (or a smoke shell if chrome-only).
 2. Open **each modified view**. Wait until paint is real — not a spinner or blank pane.
-3. Capture the window. Raw dumps go to a **gitignored** folder (typical: `data/Graphics/Screenshots/`).
+3. Capture the window. Raw dumps go to a **gitignored** folder (typical: `data/Graphics/Screenshots/`). On adoption, bind `scripts/capture_changelog_tabs.py` so this grab is one command (Tests § Capture on adoption). Console and TUI apps write text with `scripts/capture_console_text.py` instead.
 4. Promote a tracked JPEG thumb:
    ```powershell
    python scripts/promote_changelog_shot.py --tab main --source "data/Graphics/Screenshots/<file>.png"
@@ -59,13 +59,65 @@ Non-obvious fixes, environmental traps, “never do X again.” Prefer durable r
 
 ## Tests
 
+Every new feature ships with a test. Every bug fix ships with a test that **fails first** because it reproduces the bug; the fix turns it green. When an agent edits code that has no test, it adds at least a **characterization test** (pin what the code does today) in the same change. Worked commands and copy-paste patterns: [tests/README.md](../tests/README.md).
+
+**Adopting an existing codebase.** The first testing task is a smoke test that the app starts, a capture script (below), and unit tests for the core logic. Later changes grow the suite.
+
 | Tier | When |
 |------|------|
-| **unit** | Pure logic, fast, no live network |
-| **integration** | Cross-module, may use local DB/services |
-| **smoke** | Shell boots, critical path “still alive” |
+| **unit** | Fast and isolated. No network, no database, no real window. Default run. |
+| **integration** | A real local service. Mark `integration` and skip with a reason when that service is down. |
+| **smoke** | The app boots and the critical path is alive. GUI: screenshot capture. Console or TUI: text capture. |
 
-New behavior → at least unit unless the only risk is shell-level.
+A new behavior gets a unit test unless the only risk is the shell starting.
+
+### Isolation (no leaked state)
+
+**Leaked state** is anything one test leaves behind that changes another test's result. Glossary: [state leak](Glossary.md). Symptom: a test passes alone and fails in the full suite, or the other way around.
+
+| Leave behind | What to do |
+|--------------|------------|
+| Module globals, singletons, caches | A fresh object per test, or reset the global in teardown. |
+| Open windows, widgets, timers, threads | Close and delete widgets in teardown. Stop timers and threads there too. |
+| `os.environ`, `PATH` | Change them with `monkeypatch` so the next test sees the original. |
+| Files | Write under `tmp_path`. |
+| Database rows | Insert under a unique key this test owns, and delete that key in teardown. The test still passes when the table starts empty. |
+| Mocks and patches | Undo them before the test returns. |
+| Current directory | `monkeypatch.chdir(...)`. |
+| Wall clock, network | Pass time in as an argument. Mark `network` or `integration` when a test really must use the clock or the network. |
+
+### GUI / RPA windows
+
+Top-level test windows open maximized, on one screen: the primary screen, or the screen named by `TEST_SCREEN`. A test that needs an exact size opts out with `@pytest.mark.windowed`. The suite passes headless (`QT_QPA_PLATFORM=offscreen`; on Linux with no display the fixture selects offscreen for that test and restores it). Close and delete widgets in teardown. Maintained copy: [tests/conftest.py](../tests/conftest.py). Qt is imported only when a binding is installed; the unit tier stays green without PySide or PyQt.
+
+### Running
+
+Use the project's own interpreter (its virtualenv, or the env that launches the app). Agents give a paste-ready command from the repo root. The human pastes back the final pytest summary line (`N passed in Xs`). A crash has no summary line; then paste the traceback.
+
+```bash
+.venv/bin/python -m pytest tests/unit -q
+```
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/unit -q
+```
+
+### Comments
+
+Every fixture and helper documents each input (argument, fixture parameter, environment variable it reads) in its docstring.
+
+### Capture on adoption (smoke tier)
+
+Generate one capture script. One command runs it. Raw output stays in a gitignored folder.
+
+| App | Script | Output |
+|-----|--------|--------|
+| GUI | Bind [scripts/capture_changelog_tabs.py](../scripts/capture_changelog_tabs.py) | PNG of the main window and tabs, headless where possible |
+| Console, TUI, or other character UI | [scripts/capture_console_text.py](../scripts/capture_console_text.py) | Text files of the screens or commands |
+
+`CAPTURE_OUTPUT_DIR` and `CAPTURE_TEXT_DIR` override the defaults (`data/Graphics/Screenshots/`, `data/ConsoleCaptures/`).
+
+Change_Log thumbs are the curated slice of a GUI capture. [scripts/promote_changelog_shot.py](../scripts/promote_changelog_shot.py) turns one PNG into `docs/changelog_shots/` and prints the **Shot:** line ([§ Screenshots](#screenshots-each-push-that-paints-a-view)). The capture script does not commit those PNGs. Console captures have no thumbnail step.
 
 **We do not push broken code (Allen lock 2026-10-16).** A pytest **FAIL** this session ran is a stop. **Fix it this session**, or **stop and discuss with the human** so it can be fixed. Do **not** `git push`, open a “ready” PR, or merge until that case is green **or the human in chat says push anyway**. `SHORTFALL:`, “unrelated,” “the other tier passed,” and “historical flake” are **not** waivers.
 

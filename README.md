@@ -96,9 +96,13 @@ LLM_Project_Template/
   scripts/
     README.md               # helpers (Change_Log thumbs, …)
     promote_changelog_shot.py
-    capture_changelog_tabs.py  # stub — bind to your UI
+    capture_changelog_tabs.py  # GUI smoke capture — bind to your window
+    capture_console_text.py    # console / TUI smoke capture
+    capture_output.py          # gitignored capture folders
   tests/
-    README.md               # unit / integration / smoke
+    README.md               # how to write unit / integration / smoke
+    conftest.py             # maximize-on-one-screen; no-op without Qt
+    window_policy.py        # pure screen / headless decisions
     unit/
     integration/
     smoke/

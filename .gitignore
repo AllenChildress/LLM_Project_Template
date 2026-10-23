@@ -35,3 +35,5 @@ Thumbs.db
 
 # Runtime screenshot dumps (tracked thumbs live in docs/changelog_shots/)
 data/Graphics/Screenshots/
+# Console / TUI smoke captures (raw text, not Change_Log thumbs)
+data/ConsoleCaptures/
