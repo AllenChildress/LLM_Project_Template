@@ -510,6 +510,8 @@ See also shim-removal items in [ToDo.md](ToDo.md).
 
 ## Testing: unit / integration / smoke vs probes
 
+**How to write a test:** [tests/README.md](../tests/README.md) and [PROCESS.md](PROCESS.md) § Tests. That is the day-one duty (a test with every change, isolation, GUI windows, capture on adoption). The rows below name the buckets. GitHub Actions, pytest-testmon, and canaries stay dormant until the unfold pick.
+
 | Kind | Path | Rule |
 |------|------|------|
 | **Unit** | `tests/unit/` | Pure/fast; no real Postgres, live HTTP, or `QApplication`. Default pre-push. |

@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-23 — Agents write and maintain tests
+
+- **Files:** `tests/README.md`, `docs/PROCESS.md`, `AGENTS.md`, `docs/Glossary.md`, `docs/Lessons_Learned.md`, `docs/Coding_Standards.md`, `docs/changelog_shots/README.md`, `Project.md`, `README.md`, `tests/conftest.py`, `tests/window_policy.py`, `tests/unit/test_window_policy.py`, `tests/unit/test_capture_output.py`, `scripts/capture_output.py`, `scripts/capture_changelog_tabs.py`, `scripts/capture_console_text.py`, `scripts/README.md`, `.gitignore`, `.env.example`
+- **Why:** The kit had test folders and a red-test rule, and no how-to for writing tests. Adopting an app left agents without a smoke capture, and a test that passed alone could fail in the suite because leaked state had no name.
+- **What:** Duty, tiers, isolation, GUI window fixture, and paste-ready run commands. Glossary defines state leak. On adoption, bind one capture script: GUI PNGs (`capture_changelog_tabs.py`, then promote one thumb) or console text (`capture_console_text.py`). CI, testmon, and canaries stay dormant.
+- **Benefit:** Tests / regression prevention
+
 ### 2026-10-16 — Leave the code better than you found it
 
 - **Files:** `docs/Taste.md`, `docs/Coding_Standards.md`, `AGENTS.md`
