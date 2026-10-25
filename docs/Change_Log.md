@@ -44,11 +44,18 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-25 — Tier meanings, and an empty tier does not stop the chain
+
+- **Files:** `docs/PROCESS.md`, `tests/README.md`, `AGENTS.md`, `docs/Glossary.md`, `docs/Coding_Standards.md`, `Project.md`, `tests/conftest.py`, `tests/smoke/`, `tests/integration/`, `scripts/run_tiers.py`, `scripts/README.md`, `tests/unit/test_run_tiers.py`
+- **Why:** Smoke was only "the app boots." A real local service had been called integration. An empty tier made pytest exit 5 and stopped the kit's own chain.
+- **What:** Unit is function in, outputs match. Smoke checks that key components work: the app boots and reaches the important places (external services, database, each core feature). If it fails, call the engineers before production users hit it. The old real-local-service meaning sits on smoke, and so does the adoption capture. Integration is the happy path from the start. Regression is the edge cases. `scripts/run_tiers.py` treats pytest exit 5 as pass and stops on any other nonzero code. `tests/smoke/` and `tests/integration/` are in the tree.
+- **Benefit:** Tests / regression prevention
+
 ### 2026-10-25 — Test tiers run in order and stop on the first failure
 
 - **Files:** `docs/PROCESS.md`, `tests/README.md`, `AGENTS.md`, `tests/conftest.py`, `tests/regression/`, `tests/unit/test_regression_marker.py`, `README.md`, `Project.md`, `docs/Coding_Standards.md`, `docs/Glossary.md`, `docs/Libraries.md`
 - **Why:** The kit named unit, integration, and smoke, and did not say which to run first. A later tier could start after an earlier one had already failed.
-- **What:** Run order is unit, then smoke, then integration, then regression. Stop before the next tier when one fails. Regression is the full broad suite (slow, UI, end-to-end) to catch things that used to work breaking. Canaries stay a sniff list inside unit when CI is unfolded. No GitHub Actions and no testmon.
+- **What:** Run order is unit, then smoke, then integration, then regression. Stop before the next tier when one fails. Canaries stay a sniff list inside unit when CI is unfolded. No GitHub Actions and no testmon.
 - **Benefit:** Tests / regression prevention
 
 ### 2026-10-23 — Agents write and maintain tests

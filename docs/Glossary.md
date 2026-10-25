@@ -8,10 +8,10 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 | **cache_key** | Structured identity for a data slice (e.g. tuple of entity / range / version). Not a UI page string. |
 | **page_key** | Path-safe string identity for a UI page/document/slot (if the app has one). Prefer over vague “slug” for view caches. |
 | **Mixin** | Small class that contributes one behavior slice via composition/inheritance — not a god window. |
-| **Smoke test** | The app boots and the critical path is alive. On adoption, a one-command capture joins this tier: GUI PNGs or console text, in a gitignored folder. |
-| **Unit test** | Fast, isolated logic test. No network and no database. |
-| **Integration test** | Cross-module; uses a real local service. Mark it and skip when that service is down. |
-| **Regression test** | The full broad suite, including slow, UI, and end-to-end checks. Re-run to catch things that used to work breaking. Tiers run unit, then smoke, then integration, then regression, and stop on the first failing tier. |
+| **Unit test** | Supply inputs to a function and verify the outputs still match. No database, no network, no real window. |
+| **Smoke test** | Key components work. The app boots and reaches the important places: external services (for example brokers or APIs), the database, and each core feature doing its core thing (for example charts, history, positions). If it fails, call the engineers before production users hit it. A real local service belongs here (this used to be called integration). The adoption capture sits on this tier. |
+| **Integration test** | Run the whole thing from the start through key parts. Generally the happy path. |
+| **Regression test** | The edge cases. Tiers run unit, then smoke, then integration, then regression. Pytest exit 5 (no tests collected) counts as pass. Any other failure stops the chain. |
 | **Characterization test** | A test that records what the code does today, added before changing untested code. |
 | **State leak** (leaked state) | Anything one test leaves behind that changes another test's result: module globals and singletons, caches, open windows or widgets, running timers or threads, environment variables and `PATH`, files, database rows, mocked or patched functions that were not undone, or the current working directory. Symptom: a test passes alone and fails in the full suite, or the other way around. |
 | **windowed** | Pytest marker (`@pytest.mark.windowed`). The test needs an exact window size, so the default maximize-on-one-screen behavior stays off. |

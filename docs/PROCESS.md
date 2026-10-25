@@ -61,37 +61,29 @@ Non-obvious fixes, environmental traps, “never do X again.” Prefer durable r
 
 Every new feature ships with a test. Every bug fix ships with a test that **fails first** because it reproduces the bug; the fix turns it green. When an agent edits code that has no test, it adds at least a **characterization test** (pin what the code does today) in the same change. Worked commands and copy-paste patterns: [tests/README.md](../tests/README.md).
 
-**Adopting an existing codebase.** The first testing task is a smoke test that the app starts, a capture script (below), and unit tests for the core logic. Later changes grow the suite.
+**Adopting an existing codebase.** The first testing task is unit tests for the core logic, a smoke check that key components work, and the capture script on that smoke tier (below). Later changes grow the suite.
 
 | Tier | When |
 |------|------|
-| **unit** | Fast and isolated. No network, no database, no real window. Default run. |
-| **smoke** | The app boots and the critical path is alive. GUI: screenshot capture. Console or TUI: text capture. |
-| **integration** | A real local service. Mark `integration` and skip with a reason when that service is down. |
-| **regression** | The full broad suite, including slow, UI, and end-to-end checks. Re-run to catch things that used to work breaking. |
+| **unit** | Supply inputs to a function and verify the outputs still match. No database, no network, no real window. |
+| **smoke** | Key components work. The app boots and reaches the important places: external services (for example brokers or APIs), the database, and each core feature doing its core thing (for example charts, history, positions). If it fails, call the engineers before production users hit it. A real local service belongs here (this used to be called integration). Skip with a reason when a service is down. |
+| **integration** | Run the whole thing from the start through key parts. Generally the happy path. |
+| **regression** | The edge cases. |
 
-A new behavior gets a unit test unless the only risk is the shell starting.
+A new behavior gets a unit test unless the only risk is the happy path from startup.
 
 ### Run order (fail-fast)
 
 Run the tiers in this order: **unit**, **smoke**, **integration**, **regression**. If any test in a tier fails, stop before the next tier and say which tier stopped the run.
 
-**Regression** is the full broad suite, including slow, UI, and end-to-end checks. Re-run it to catch things that used to work breaking.
-
-Use the project interpreter (its virtualenv, or the env that launches the app). From the repo root, `&&` and the `if` stop the next tier. A missing tier folder, or a folder with no tests, also makes pytest exit non-zero, so the chain stops:
+Pytest exit **5** (no tests collected) counts as a pass. Any other nonzero code stops the chain. [scripts/run_tiers.py](../scripts/run_tiers.py) does that. Its inputs are the tier paths, in order. It uses the interpreter that launches it.
 
 ```bash
-.venv/bin/python -m pytest tests/unit -q && \
-.venv/bin/python -m pytest tests/smoke -q && \
-.venv/bin/python -m pytest tests/integration -q && \
-.venv/bin/python -m pytest tests/regression -q
+.venv/bin/python scripts/run_tiers.py tests/unit tests/smoke tests/integration tests/regression
 ```
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest tests/unit -q; if ($LASTEXITCODE -ne 0) { exit }
-.\.venv\Scripts\python.exe -m pytest tests/smoke -q; if ($LASTEXITCODE -ne 0) { exit }
-.\.venv\Scripts\python.exe -m pytest tests/integration -q; if ($LASTEXITCODE -ne 0) { exit }
-.\.venv\Scripts\python.exe -m pytest tests/regression -q; if ($LASTEXITCODE -ne 0) { exit }
+.\.venv\Scripts\python.exe scripts\run_tiers.py tests/unit tests/smoke tests/integration tests/regression
 ```
 
 ### Isolation (no leaked state)
@@ -107,7 +99,7 @@ Use the project interpreter (its virtualenv, or the env that launches the app). 
 | Database rows | Insert under a unique key this test owns, and delete that key in teardown. The test still passes when the table starts empty. |
 | Mocks and patches | Undo them before the test returns. |
 | Current directory | `monkeypatch.chdir(...)`. |
-| Wall clock, network | Pass time in as an argument. Mark `network` or `integration` when a test really must use the clock or the network. |
+| Wall clock, network | Pass time in as an argument. Mark `network` or `smoke` when a test really must use the clock, the network, or a local service. |
 
 ### GUI / RPA windows
 
@@ -131,7 +123,7 @@ Every fixture and helper documents each input (argument, fixture parameter, envi
 
 ### Capture on adoption (smoke tier)
 
-Generate one capture script. One command runs it. Raw output stays in a gitignored folder.
+Generate one capture script. One command runs it. Raw output stays in a gitignored folder. Capture shows the app booted and reached its important places, so it sits on **smoke** (the early warning). Integration is the happy path through the whole app.
 
 | App | Script | Output |
 |-----|--------|--------|

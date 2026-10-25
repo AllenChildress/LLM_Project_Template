@@ -9,5 +9,6 @@ Portable helpers. App repos add product-specific scripts here or under `scripts/
 | [capture_console_text.py](capture_console_text.py) | **Console / TUI smoke capture.** Bind it so one command writes stdout and stderr under the gitignored text folder. No thumbnail step. |
 | [capture_output.py](capture_output.py) | Resolves those folders from `CAPTURE_OUTPUT_DIR` / `CAPTURE_TEXT_DIR` |
 | [score_cc.py](score_cc.py) | McCabe cyclomatic complexity on functions (**≤ 10** target, **> 15** too high) |
+| [run_tiers.py](run_tiers.py) | Pytest tiers in order. Inputs: tier paths. Exit 5 (no tests collected) counts as pass. Any other nonzero stops and names that tier. |
 
 See [docs/PROCESS.md](../docs/PROCESS.md) § Screenshots and § Cyclomatic complexity.
