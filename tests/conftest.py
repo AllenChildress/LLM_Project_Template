@@ -52,6 +52,10 @@ def pytest_configure(config: pytest.Config) -> None:
         "markers",
         "network: contacts the network; keep it out of the default unit run",
     )
+    config.addinivalue_line(
+        "markers",
+        "regression: full broad suite, including slow, UI, and end-to-end checks; re-run to catch things that used to work breaking",
+    )
 
 
 def _load_qt_widgets() -> object | None:

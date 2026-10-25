@@ -11,12 +11,13 @@ Shared vocabulary for humans and agents. **Add product terms here** as the app g
 | **Smoke test** | The app boots and the critical path is alive. On adoption, a one-command capture joins this tier: GUI PNGs or console text, in a gitignored folder. |
 | **Unit test** | Fast, isolated logic test. No network and no database. |
 | **Integration test** | Cross-module; uses a real local service. Mark it and skip when that service is down. |
+| **Regression test** | The full broad suite, including slow, UI, and end-to-end checks. Re-run to catch things that used to work breaking. Tiers run unit, then smoke, then integration, then regression, and stop on the first failing tier. |
 | **Characterization test** | A test that records what the code does today, added before changing untested code. |
 | **State leak** (leaked state) | Anything one test leaves behind that changes another test's result: module globals and singletons, caches, open windows or widgets, running timers or threads, environment variables and `PATH`, files, database rows, mocked or patched functions that were not undone, or the current working directory. Symptom: a test passes alone and fails in the full suite, or the other way around. |
 | **windowed** | Pytest marker (`@pytest.mark.windowed`). The test needs an exact window size, so the default maximize-on-one-screen behavior stays off. |
-| **Canary** | A tiny sniff-test that runs **before** the rest of the suite (typical moles). Stock_Data: `src/testing/canaries.json`. |
+| **Canary** | A tiny sniff-test that runs **first inside the unit tier**, before the rest of unit (typical moles). Stock_Data: `src/testing/canaries.json`. |
 | **pytest-testmon** | Pytest plugin that re-runs tests whose code changed (`--impacted`). **Local only** — CI has no map. |
-| **CI unfold** | Kit default: no GitHub Actions. When tests cross the PROCESS threshold, one purple pick to add canaries + testmon + a unit workflow. |
+| **CI unfold** | Kit default: no GitHub Actions. When tests cross the PROCESS threshold, one purple pick. Canaries run first inside unit, then smoke, integration, regression. Testmon stays local. |
 | **Change_Log** | User-visible history (Why / What / Benefit). |
 | **ToDo** | Backlog; finished work leaves open columns. |
 | **Worktree** | A Grok **managed** checkout (Grok Build **1.0.42 or newer**): detached at the base commit, **no branch**. One writer, short task: stay in the primary checkout. Second writer / long task: `grok -w --ref main` or `grok worktree create`. **VS Code:** purple pick recommended **only** in that second-writer case (label: detached Grok worktree). Do not `git worktree add -b wip/<topic>`. Ending a session does not remove it. `grok worktree rm` / `grok worktree gc --max-age 7d`. |

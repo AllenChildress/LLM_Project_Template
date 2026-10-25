@@ -100,12 +100,13 @@ LLM_Project_Template/
     capture_console_text.py    # console / TUI smoke capture
     capture_output.py          # gitignored capture folders
   tests/
-    README.md               # how to write unit / integration / smoke
+    README.md               # how to write tests; run unit, smoke, integration, regression
     conftest.py             # maximize-on-one-screen; no-op without Qt
     window_policy.py        # pure screen / headless decisions
     unit/
-    integration/
     smoke/
+    integration/
+    regression/
   .gitignore
 ```
 

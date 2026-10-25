@@ -19,7 +19,7 @@ Pin versions in `requirements.txt` or `pyproject.toml` for the app — recreate 
 | Library | Why |
 |---------|-----|
 | **Python 3.11+** (3.12 preferred) | Modern typing, performance |
-| **pytest** | Unit / integration / smoke |
+| **pytest** | Unit, smoke, integration, regression |
 | **python-dotenv** | Local `.env` without committing secrets |
 | **requests** or **httpx** | HTTP APIs (httpx if async later) |
 | **pydantic** (optional) | Validated config / API models |

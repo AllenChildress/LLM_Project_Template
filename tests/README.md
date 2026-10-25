@@ -1,15 +1,16 @@
 # Tests
 
 How agents write and maintain tests. Policy lock: [PROCESS.md](../docs/PROCESS.md) § Tests.
-The dormant CI rule at the bottom of this file is unchanged.
+CI unfold at the bottom stays dormant.
 
 ```text
 tests/
   conftest.py        # maximize-on-one-screen; no-op when Qt is absent
   window_policy.py   # pure screen / headless decisions (no Qt)
   unit/              # fast, isolated, no network and no database
-  integration/       # real local services; skip cleanly when the service is down
   smoke/             # app boots and the critical path is alive
+  integration/       # real local services; skip cleanly when the service is down
+  regression/        # full broad suite: slow, UI, and end-to-end
 ```
 
 ## Agent duty
@@ -31,10 +32,33 @@ Each later change grows coverage. The first commit does not boil the ocean.
 | Tier | Put the test here when | Stays out |
 |------|------------------------|-----------|
 | **unit** | The check is fast and isolated. Default pre-push run. | Network, database, a real window, the wall clock. |
-| **integration** | The check needs a real local service (database, queue, local HTTP). Mark `@pytest.mark.integration` and `pytest.skip` with a reason when that service is down. | Live vendor calls. Those are `@pytest.mark.network` and stay out of the default run. |
 | **smoke** | The app boots and the critical path is alive. GUI apps also keep a screenshot capture. Console and TUI apps keep a text capture. | Branch-level business rules. Those belong in unit tests. |
+| **integration** | The check needs a real local service (database, queue, local HTTP). Mark `@pytest.mark.integration` and `pytest.skip` with a reason when that service is down. | Live vendor calls. Those are `@pytest.mark.network` and stay out of the default run. |
+| **regression** | The check is the full broad suite: slow, UI, or end-to-end. Re-run to catch things that used to work breaking. Mark `@pytest.mark.regression`. | A fast isolated rule (unit) or a boot check (smoke). |
 
 A new behavior gets a unit test unless the only risk is the shell starting.
+
+### Run order (fail-fast)
+
+Run the tiers in this order: **unit**, **smoke**, **integration**, **regression**. If any test in a tier fails, stop before the next tier and say which tier stopped the run.
+
+**Regression** is the full broad suite, including slow, UI, and end-to-end checks. Re-run it to catch things that used to work breaking.
+
+Use the project interpreter. From the repo root, `&&` and the `if` stop the next tier. A missing tier folder, or a folder with no tests, also makes pytest exit non-zero, so the chain stops:
+
+```bash
+.venv/bin/python -m pytest tests/unit -q && \
+.venv/bin/python -m pytest tests/smoke -q && \
+.venv/bin/python -m pytest tests/integration -q && \
+.venv/bin/python -m pytest tests/regression -q
+```
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/unit -q; if ($LASTEXITCODE -ne 0) { exit }
+.\.venv\Scripts\python.exe -m pytest tests/smoke -q; if ($LASTEXITCODE -ne 0) { exit }
+.\.venv\Scripts\python.exe -m pytest tests/integration -q; if ($LASTEXITCODE -ne 0) { exit }
+.\.venv\Scripts\python.exe -m pytest tests/regression -q; if ($LASTEXITCODE -ne 0) { exit }
+```
 
 ## Isolation (no leaked state)
 
@@ -153,16 +177,20 @@ $env:QT_QPA_PLATFORM = "offscreen"
 
 Agents give the human that full command. The human pastes back the **final pytest summary line** (`5 passed in 0.04s`). A crash has no summary line; then paste the traceback.
 
-Integration, when a local service is up:
+One tier at a time, in run order. The chain that stops on the first failure is [Run order (fail-fast)](#run-order-fail-fast).
 
 ```bash
+.venv/bin/python -m pytest tests/unit -q
+.venv/bin/python -m pytest tests/smoke -q
 .venv/bin/python -m pytest tests/integration -q
+.venv/bin/python -m pytest tests/regression -q
 ```
 
-Smoke:
-
-```bash
-.venv/bin/python -m pytest tests/smoke -q
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/unit -q
+.\.venv\Scripts\python.exe -m pytest tests/smoke -q
+.\.venv\Scripts\python.exe -m pytest tests/integration -q
+.\.venv\Scripts\python.exe -m pytest tests/regression -q
 ```
 
 ## Comments
@@ -266,4 +294,4 @@ def save_console(command: list[str], folder: Path) -> Path:
 
 This kit does **not** ship GitHub Actions or pytest-testmon. Keep it that way until PROCESS § **CI / pytest unfold**.
 
-When the app crosses the threshold (≥25 unit tests, a suite runner, or the human asks for CI), the agent offers **one** purple pick. Recommended: unfold the Stock_Data shape — canaries first, then unit; testmon `--impacted` **locally**; CI runs canaries then unit with **no** `--impacted`.
+When the app crosses the threshold (≥25 unit tests, a suite runner, or the human asks for CI), the agent offers **one** purple pick. Recommended: unfold the Stock_Data shape — canaries first within unit, then smoke, integration, regression; testmon `--impacted` **locally**; CI runs that same order with **no** `--impacted`.

@@ -66,10 +66,33 @@ Every new feature ships with a test. Every bug fix ships with a test that **fail
 | Tier | When |
 |------|------|
 | **unit** | Fast and isolated. No network, no database, no real window. Default run. |
-| **integration** | A real local service. Mark `integration` and skip with a reason when that service is down. |
 | **smoke** | The app boots and the critical path is alive. GUI: screenshot capture. Console or TUI: text capture. |
+| **integration** | A real local service. Mark `integration` and skip with a reason when that service is down. |
+| **regression** | The full broad suite, including slow, UI, and end-to-end checks. Re-run to catch things that used to work breaking. |
 
 A new behavior gets a unit test unless the only risk is the shell starting.
+
+### Run order (fail-fast)
+
+Run the tiers in this order: **unit**, **smoke**, **integration**, **regression**. If any test in a tier fails, stop before the next tier and say which tier stopped the run.
+
+**Regression** is the full broad suite, including slow, UI, and end-to-end checks. Re-run it to catch things that used to work breaking.
+
+Use the project interpreter (its virtualenv, or the env that launches the app). From the repo root, `&&` and the `if` stop the next tier. A missing tier folder, or a folder with no tests, also makes pytest exit non-zero, so the chain stops:
+
+```bash
+.venv/bin/python -m pytest tests/unit -q && \
+.venv/bin/python -m pytest tests/smoke -q && \
+.venv/bin/python -m pytest tests/integration -q && \
+.venv/bin/python -m pytest tests/regression -q
+```
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/unit -q; if ($LASTEXITCODE -ne 0) { exit }
+.\.venv\Scripts\python.exe -m pytest tests/smoke -q; if ($LASTEXITCODE -ne 0) { exit }
+.\.venv\Scripts\python.exe -m pytest tests/integration -q; if ($LASTEXITCODE -ne 0) { exit }
+.\.venv\Scripts\python.exe -m pytest tests/regression -q; if ($LASTEXITCODE -ne 0) { exit }
+```
 
 ### Isolation (no leaked state)
 
@@ -92,7 +115,7 @@ Top-level test windows open maximized, on one screen: the primary screen, or the
 
 ### Running
 
-Use the project's own interpreter (its virtualenv, or the env that launches the app). Agents give a paste-ready command from the repo root. The human pastes back the final pytest summary line (`N passed in Xs`). A crash has no summary line; then paste the traceback.
+Use the project's own interpreter (its virtualenv, or the env that launches the app). Agents give a paste-ready command from the repo root. The four-tier chain is [Run order (fail-fast)](#run-order-fail-fast). The human pastes back the final pytest summary line (`N passed in Xs`). A crash has no summary line; then paste the traceback.
 
 ```bash
 .venv/bin/python -m pytest tests/unit -q
@@ -130,7 +153,7 @@ Change_Log thumbs are the curated slice of a GUI capture. [scripts/promote_chang
 
 ### CI / pytest unfold (dormant until a threshold)
 
-**Default is dormant.** A new app gets `tests/{unit,integration,smoke}/` and `python -m pytest tests/unit -q`. It does **not** get GitHub Actions, `pytest-testmon`, or a canary harness on day one. Do not copy Stock_Data’s `src/testing/` or `.github/workflows/` until the human says yes.
+**Default is dormant.** A new app gets `tests/{unit,smoke,integration,regression}/` and runs those tiers in that order, stopping on the first failing tier. Day one is still `python -m pytest tests/unit -q`. It does **not** get GitHub Actions, `pytest-testmon`, or a canary harness on day one. Do not copy Stock_Data’s `src/testing/` or `.github/workflows/` until the human says yes.
 
 **Threshold — unfold is due when any one is true**
 
@@ -144,17 +167,17 @@ Change_Log thumbs are the curated slice of a GUI capture. [scripts/promote_chang
 
 | Pick | Agent does |
 |------|------------|
-| **Unfold Stock_Data-style pytest (Recommended)** | Canaries first, then unit. Local `--impacted` via **pytest-testmon**. GitHub Actions: canaries then unit, **no** `--impacted` on CI (clean runner has no testmon map). Gitignore `.testmondata`. OOP `TestLane` list, not a tier-string switch. Reference: Stock_Data `src/testing/` + `scripts/testing/run_smoke_suite.py` + `.github/workflows/unit-tests.yml`. |
+| **Unfold Stock_Data-style pytest (Recommended)** | Canaries are a sniff list inside the unit tier (canaries first within unit), then smoke, integration, regression. Local `--impacted` via **pytest-testmon**. The workflow runs that same order, **no** `--impacted` on CI (clean runner has no testmon map). Gitignore `.testmondata`. OOP `TestLane` list, not a tier-string switch. Reference: Stock_Data `src/testing/` + `scripts/testing/run_smoke_suite.py` + `.github/workflows/unit-tests.yml`. |
 | **Stay dormant** | Keep pytest local only. Record the skip in ToDo. |
 | **Decide later** | Same as Stay dormant until they pick again. |
 
 **Unfold shape (when they choose Recommended)**
 
-1. `tests/{unit,integration,smoke}/` — cases stay `test_*` functions unless the app already uses classes.
-2. `canaries.json` — a short sniff list (typical moles) that runs **before** the rest of unit.
+1. `tests/{unit,smoke,integration,regression}/` — cases stay `test_*` functions unless the app already uses classes. Run in that order. Stop on the first failing tier.
+2. `canaries.json` — a short sniff list (typical moles) that runs **first inside the unit tier**, before the rest of unit.
 3. Suite script under `scripts/testing/` with `--tier` and optional `--impacted`.
 4. `pytest-testmon` in requirements; `.testmondata` gitignored; `--impacted` is **local only**.
-5. `.github/workflows/` unit job: `windows-latest` (or the app’s OS), pip + `requirements.txt` (not a private conda env), canaries then unit.
+5. `.github/workflows/` job: `windows-latest` (or the app’s OS), pip + `requirements.txt` (not a private conda env). Order: canaries, then the rest of unit, then smoke, integration, regression. No `--impacted`.
 
 Until that pick, agents: no workflow YAML, no testmon dependency, no canary package.
 

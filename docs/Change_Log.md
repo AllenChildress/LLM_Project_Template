@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-25 — Test tiers run in order and stop on the first failure
+
+- **Files:** `docs/PROCESS.md`, `tests/README.md`, `AGENTS.md`, `tests/conftest.py`, `tests/regression/`, `tests/unit/test_regression_marker.py`, `README.md`, `Project.md`, `docs/Coding_Standards.md`, `docs/Glossary.md`, `docs/Libraries.md`
+- **Why:** The kit named unit, integration, and smoke, and did not say which to run first. A later tier could start after an earlier one had already failed.
+- **What:** Run order is unit, then smoke, then integration, then regression. Stop before the next tier when one fails. Regression is the full broad suite (slow, UI, end-to-end) to catch things that used to work breaking. Canaries stay a sniff list inside unit when CI is unfolded. No GitHub Actions and no testmon.
+- **Benefit:** Tests / regression prevention
+
 ### 2026-10-23 — Agents write and maintain tests
 
 - **Files:** `tests/README.md`, `docs/PROCESS.md`, `AGENTS.md`, `docs/Glossary.md`, `docs/Lessons_Learned.md`, `docs/Coding_Standards.md`, `docs/changelog_shots/README.md`, `Project.md`, `README.md`, `tests/conftest.py`, `tests/window_policy.py`, `tests/unit/test_window_policy.py`, `tests/unit/test_capture_output.py`, `scripts/capture_output.py`, `scripts/capture_changelog_tabs.py`, `scripts/capture_console_text.py`, `scripts/README.md`, `.gitignore`, `.env.example`

@@ -74,7 +74,7 @@ Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions.
 - **Do not hardcode** paths, URLs, runtime file names, hosts, or ports (Allen lock — no exception grant). `.env` / config / derive. [Coding_Standards.md](docs/Coding_Standards.md).
 - Prefer domain/session objects over new parallel maps.
 - **SQL lives in `.sql` files**; app code loads and runs it — see Coding_Standards.
-- Tests under `tests/{unit,integration,smoke}/`. Every feature or fix ships with a test ([tests/README.md](tests/README.md)). **CI/CD stays dormant** until PROCESS § CI / pytest unfold (then one purple pick — do not scaffold GitHub Actions or pytest-testmon on day one).
+- Tests under `tests/{unit,smoke,integration,regression}/`, run in that order, stop on first failing tier. Every feature or fix ships with a test ([tests/README.md](tests/README.md)). **CI/CD stays dormant** until PROCESS § CI / pytest unfold (then one purple pick — do not scaffold GitHub Actions or pytest-testmon on day one).
 - Docs hygiene with the code: Change_Log / ToDo / Lessons when PROCESS requires it.
 - Commits: clear subject; optional trailers `Assisted-by: Grok Build`.
 

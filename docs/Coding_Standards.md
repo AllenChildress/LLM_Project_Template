@@ -508,21 +508,22 @@ Allen accepts shims **only as a short bridge** during an import-path move. When 
 
 See also shim-removal items in [ToDo.md](ToDo.md).
 
-## Testing: unit / integration / smoke vs probes
+## Testing: unit / smoke / integration / regression vs probes
 
 **How to write a test:** [tests/README.md](../tests/README.md) and [PROCESS.md](PROCESS.md) § Tests. That is the day-one duty (a test with every change, isolation, GUI windows, capture on adoption). The rows below name the buckets. GitHub Actions, pytest-testmon, and canaries stay dormant until the unfold pick.
 
 | Kind | Path | Rule |
 |------|------|------|
 | **Unit** | `tests/unit/` | Pure/fast; no real Postgres, live HTTP, or `QApplication`. Default pre-push. |
-| **Integration** | `tests/integration/` | Real deps: `db/`, `network/`, `qt/`. Markers `db`, `live`, `ui`, `network` as needed. |
 | **Smoke** | `tests/smoke/` | Minimal health checks (DB inventory, UI alive, optional live pipeline). |
+| **Integration** | `tests/integration/` | Real deps: `db/`, `network/`, `qt/`. Markers `db`, `live`, `ui`, `network` as needed. |
+| **Regression** | `tests/regression/` | Full broad suite: slow, UI, and end-to-end. Re-run to catch things that used to work breaking. |
 | **Probe** | `scripts/experiments/`, local `_probe_*` | Debug one issue; **do not commit** scratch under `scripts/testing/_probe_*` (gitignored). |
 | **Harness** | `scripts/testing/run_smoke_suite.py` | Thin pytest facade (`--tier` → paths); no business logic. |
 
-**Rules:** New tests go under `tests/{unit,integration,smoke}/` as `test_*.py` with `test_*` functions. Path auto-marks the bucket in [tests/conftest.py](../tests/conftest.py). Config/markers: [pyproject.toml](../pyproject.toml).
+**Rules:** New tests go under `tests/{unit,smoke,integration,regression}/` as `test_*.py` with `test_*` functions. Run in that order and stop on the first failing tier. Path auto-marks the bucket in [tests/conftest.py](../tests/conftest.py). Config/markers: [pyproject.toml](../pyproject.toml).
 
-**Hierarchy compliance (required):** Maintain pytest as the canonical test hierarchy. `tests/unit`, `tests/integration`, and `tests/smoke` are the durable homes for committed behavior checks. Keep names/markers pytest-compliant and keep test intent aligned with the bucket (unit = isolated, integration = real dependencies, smoke = health path).
+**Hierarchy compliance (required):** Maintain pytest as the canonical test hierarchy. `tests/unit`, `tests/smoke`, `tests/integration`, and `tests/regression` are the durable homes for committed behavior checks. Keep names/markers pytest-compliant and keep test intent aligned with the bucket (unit = isolated, smoke = health path, integration = real dependencies, regression = the broad suite).
 
 **Script-test migration rule:** Most script-style tests should live in `tests/` instead of `scripts/`. Keep `scripts/testing/` focused on orchestration wrappers (for example `run_smoke_suite.py`), one-off local probes, and short transition helpers. If a script asserts product behavior more than once, promote it to pytest under the proper hierarchy.
 
