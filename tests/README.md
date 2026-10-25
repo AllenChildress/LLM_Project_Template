@@ -1,15 +1,16 @@
 # Tests
 
 How agents write and maintain tests. Policy lock: [PROCESS.md](../docs/PROCESS.md) § Tests.
-The dormant CI rule at the bottom of this file is unchanged.
+CI unfold at the bottom stays dormant.
 
 ```text
 tests/
   conftest.py        # maximize-on-one-screen; no-op when Qt is absent
   window_policy.py   # pure screen / headless decisions (no Qt)
-  unit/              # fast, isolated, no network and no database
-  integration/       # real local services; skip cleanly when the service is down
-  smoke/             # app boots and the critical path is alive
+  unit/              # function in, outputs match; no database, network, or window
+  smoke/             # key components work; early warning before users
+  integration/       # happy path from the start through key parts
+  regression/        # edge cases
 ```
 
 ## Agent duty
@@ -20,9 +21,8 @@ When an agent edits a function that has no test, it adds at least a **characteri
 
 **Adopting an existing codebase** into this template. The first testing task, before new features:
 
-1. A **smoke** test that the app starts (process comes up, main window constructs, or `main` returns).
-2. A **capture script** on the smoke tier (GUI PNGs, or console text). See [Capture on adoption](#capture-on-adoption).
-3. **Unit** tests for the core logic.
+1. **Unit** tests for the core logic (inputs in, outputs match).
+2. A **smoke** check that key components work: the app boots and reaches the important places. Skip with a reason when a service is down. See [Capture on adoption](#capture-on-adoption).
 
 Each later change grows coverage. The first commit does not boil the ocean.
 
@@ -30,11 +30,26 @@ Each later change grows coverage. The first commit does not boil the ocean.
 
 | Tier | Put the test here when | Stays out |
 |------|------------------------|-----------|
-| **unit** | The check is fast and isolated. Default pre-push run. | Network, database, a real window, the wall clock. |
-| **integration** | The check needs a real local service (database, queue, local HTTP). Mark `@pytest.mark.integration` and `pytest.skip` with a reason when that service is down. | Live vendor calls. Those are `@pytest.mark.network` and stay out of the default run. |
-| **smoke** | The app boots and the critical path is alive. GUI apps also keep a screenshot capture. Console and TUI apps keep a text capture. | Branch-level business rules. Those belong in unit tests. |
+| **unit** | You supply inputs to a function and verify the outputs still match. No database, no network, no real window. | A database, the network, or a real window. |
+| **smoke** | Key components work. The app boots and reaches the important places: external services (for example brokers or APIs), the database, and each core feature doing its core thing (for example charts, history, positions). If it fails, call the engineers before production users hit it. A real local service belongs here (this used to be called integration). Mark `@pytest.mark.smoke` and `pytest.skip` with a reason when a service is down. | The happy path through the whole app. That is integration. |
+| **integration** | You run the whole thing from the start through key parts. Generally the happy path. Mark `@pytest.mark.integration`. | One key component doing its core thing. That is smoke. Live calls that are not that check stay `@pytest.mark.network`. |
+| **regression** | The case is an edge. Mark `@pytest.mark.regression`. | The happy path (integration) and a single function's outputs (unit). |
 
-A new behavior gets a unit test unless the only risk is the shell starting.
+A new behavior gets a unit test unless the only risk is the happy path from startup.
+
+### Run order (fail-fast)
+
+Run the tiers in this order: **unit**, **smoke**, **integration**, **regression**. If any test in a tier fails, stop before the next tier and say which tier stopped the run.
+
+Pytest exit **5** (no tests collected) counts as a pass. Any other nonzero code stops the chain. [scripts/run_tiers.py](../scripts/run_tiers.py) does that. Inputs: tier paths, in order. The interpreter is the one that launches the script.
+
+```bash
+.venv/bin/python scripts/run_tiers.py tests/unit tests/smoke tests/integration tests/regression
+```
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_tiers.py tests/unit tests/smoke tests/integration tests/regression
+```
 
 ## Isolation (no leaked state)
 
@@ -49,7 +64,7 @@ A new behavior gets a unit test unless the only risk is the shell starting.
 | Database rows | Insert under a unique key this test owns, and delete that key in teardown. The test still passes when the table starts empty. It does not read a row a previous run left behind. |
 | Mocks and patches | Undo them (`monkeypatch`, or the mock's own stop) before the test returns. |
 | Current working directory | `monkeypatch.chdir(...)`. The process returns to the directory it started in. |
-| Wall clock or network | Pass time in as an argument. Mark `network` or `integration` when the test really must use the clock or the network. |
+| Wall clock or network | Pass time in as an argument. Mark `network` or `smoke` when the test really must use the clock, the network, or a local service. |
 
 ```python
 def test_flag_selects_local_mode(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -62,12 +77,13 @@ def test_flag_selects_local_mode(monkeypatch: pytest.MonkeyPatch) -> None:
 ```
 
 ```python
-@pytest.mark.integration
+@pytest.mark.smoke
 def test_stores_its_own_row() -> None:
     """Insert one row under a key this test owns, then delete that key.
 
     The key is unique to this test. Teardown removes it even when the assert fails.
-    Skip with a reason when the local service is down. The unit tier does not need it.
+    This is smoke: the database is up and this write does its core thing. Skip with a reason when that service is down.
+    The unit tier does not need it.
     """
     if not service_is_up():
         pytest.skip("local service is down")
@@ -153,16 +169,20 @@ $env:QT_QPA_PLATFORM = "offscreen"
 
 Agents give the human that full command. The human pastes back the **final pytest summary line** (`5 passed in 0.04s`). A crash has no summary line; then paste the traceback.
 
-Integration, when a local service is up:
+One tier at a time. Exit 5 counts as pass here too. The fail-fast chain is [Run order (fail-fast)](#run-order-fail-fast).
 
 ```bash
-.venv/bin/python -m pytest tests/integration -q
+.venv/bin/python scripts/run_tiers.py tests/unit
+.venv/bin/python scripts/run_tiers.py tests/smoke
+.venv/bin/python scripts/run_tiers.py tests/integration
+.venv/bin/python scripts/run_tiers.py tests/regression
 ```
 
-Smoke:
-
-```bash
-.venv/bin/python -m pytest tests/smoke -q
+```powershell
+.\.venv\Scripts\python.exe scripts\run_tiers.py tests/unit
+.\.venv\Scripts\python.exe scripts\run_tiers.py tests/smoke
+.\.venv\Scripts\python.exe scripts\run_tiers.py tests/integration
+.\.venv\Scripts\python.exe scripts\run_tiers.py tests/regression
 ```
 
 ## Comments
@@ -201,7 +221,7 @@ Characterization, when the code already behaves and has no test: assert today's 
 
 ## Capture on adoption
 
-Generate **one** capture script as part of the smoke tier. One command runs it. Output goes to a gitignored folder. `CAPTURE_OUTPUT_DIR` and `CAPTURE_TEXT_DIR` override the defaults (see `.env.example`). Both keys accept a repo-relative path or an absolute path.
+Generate **one** capture script on the **smoke** tier. It shows the app booted and reached its important places. That is the early warning. Integration is the happy path through the whole app. One command runs it. Output goes to a gitignored folder. `CAPTURE_OUTPUT_DIR` and `CAPTURE_TEXT_DIR` override the defaults (see `.env.example`). Both keys accept a repo-relative path or an absolute path.
 
 | App | Script to bind | What one command writes |
 |-----|----------------|-------------------------|
@@ -266,4 +286,4 @@ def save_console(command: list[str], folder: Path) -> Path:
 
 This kit does **not** ship GitHub Actions or pytest-testmon. Keep it that way until PROCESS § **CI / pytest unfold**.
 
-When the app crosses the threshold (≥25 unit tests, a suite runner, or the human asks for CI), the agent offers **one** purple pick. Recommended: unfold the Stock_Data shape — canaries first, then unit; testmon `--impacted` **locally**; CI runs canaries then unit with **no** `--impacted`.
+When the app crosses the threshold (≥25 unit tests, a suite runner, or the human asks for CI), the agent offers **one** purple pick. Recommended: unfold the Stock_Data shape — canaries first within unit, then smoke, integration, regression; testmon `--impacted` **locally**; CI runs that same order with **no** `--impacted`.

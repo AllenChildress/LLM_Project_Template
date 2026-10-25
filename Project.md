@@ -36,7 +36,7 @@ Copy answers under each line or reply in chat.
 | Lessons_Learned.md | Y / N | Scar tissue |
 | Taste.md | Y / N | Judgment |
 | Logging norms | Y / N | Levels / story vs construction |
-| tests unit/integration/smoke | Y / N | |
+| tests unit/smoke/integration/regression | Y / N | Run in that order; stop on the first failing tier |
 | pytest + suite script later | Y / N | |
 | CI / pytest unfold (dormant) | Y / N | GitHub Actions + canaries + testmon **off** until PROCESS threshold, then one purple pick |
 | Screenshot smoke (UI apps) | Y / N | |
@@ -66,7 +66,7 @@ docs/Lessons_Learned.md
 docs/Taste.md                    # optional
 docs/skills/General/…            # optional playbooks
 docs/skills/Domain/…             # optional
-tests/{unit,integration,smoke}/
+tests/{unit,smoke,integration,regression}/
 ```
 
 App-specific docs (schema, runbooks, product ADRs) stay **outside** this kit once the app grows.
@@ -79,7 +79,7 @@ App-specific docs (schema, runbooks, product ADRs) stay **outside** this kit onc
 2. **One Change_Log entry per user-visible change** (Why / What / Benefit). If a view/tab paint changed, add **Shot:** (PROCESS § Screenshots).
 3. **ToDo** updated when backlog items complete or cancel.
 4. **Module size:** prefer files under ~500 lines; split by purpose (not arbitrary chops).
-5. **Tests:** every feature or fix ships with a test (bug fix fails first). Adopting an app: smoke that it starts, a capture script, then unit tests for the core logic. See [tests/README.md](tests/README.md).
+5. **Tests:** every feature or fix ships with a test (bug fix fails first). Adopting an app: unit tests for the core logic, a smoke check that key components work, and a capture script. See [tests/README.md](tests/README.md).
 6. **Secrets:** never commit `.env`, tokens, dumps.
 7. **Generic vs specific:** kit files stay portable; product truth lives in the app repo.
 
@@ -125,7 +125,7 @@ Use this kit as the demo spine (not a specific product’s internals).
 2. Skill / staff files: AGENTS, PROCESS, Coding_Standards  
 3. Documentation: Change_Log, Glossary  
 4. Logging  
-5. Testing (unit / smoke / integration, pytest, screenshots)  
+5. Testing (unit, smoke, integration, regression, in that order; pytest, screenshots)  
 6. Database (schema, migrations, backups) — if included  
 7. Data model (session-style ownership over map sprawl) — if applicable  
 8. UI patterns (tabs, status, refresh, log) — if applicable  

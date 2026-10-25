@@ -46,11 +46,19 @@ def pytest_configure(config: pytest.Config) -> None:
     )
     config.addinivalue_line(
         "markers",
-        "integration: needs a real local service; skip with a reason when that service is down",
+        "smoke: key components work — the app boots and reaches important places (external services, database, each core feature). Early warning before production users. Skip with a reason when a service is down",
+    )
+    config.addinivalue_line(
+        "markers",
+        "integration: the whole app from the start through key parts; generally the happy path",
     )
     config.addinivalue_line(
         "markers",
         "network: contacts the network; keep it out of the default unit run",
+    )
+    config.addinivalue_line(
+        "markers",
+        "regression: the edge cases",
     )
 
 
