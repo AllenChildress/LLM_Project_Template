@@ -7,7 +7,8 @@ How humans and agents work on **any** project that uses this staff kit.
 1. **Outcome-level work** — design, implement, smoke, document without re-teaching process each time.
 2. **Docs with the code** — same change series as behavior.
 3. **When a session finishes:** `git switch main && git pull --ff-only`. If the diff is worth keeping, branch off that `main`, commit, squash-merge, delete the local branch and the remote branch. Then `grok worktree rm <id>` if this session used a managed worktree. Do not delete the primary checkout.
-4. **Short answers** to humans; completeness is in files and tests, not essay chat.
+4. **Three open PRs, then hold** — [§ PR flow](#pr-flow).
+5. **Short answers** to humans; completeness is in files and tests, not essay chat.
 
 ## Change_Log
 
@@ -45,6 +46,7 @@ Apps with a desktop shell should also keep a `scripts/capture_changelog_tabs.py`
 - Open work in backlog columns.
 - Finished items → **Done ✓** (or remove from open and record in Change_Log if user-visible).
 - Do not leave stale checked items in “open” forever.
+- While [§ PR flow](#pr-flow) is at `hold: 3 open`, new ideas land here and ride in the next PR. Do not start that work.
 
 ## Lessons_Learned
 
@@ -107,7 +109,7 @@ Top-level test windows open maximized, on one screen: the primary screen, or the
 
 ### Running
 
-Use the project's own interpreter (its virtualenv, or the env that launches the app). Agents give a paste-ready command from the repo root. The four-tier chain is [Run order (fail-fast)](#run-order-fail-fast). The human pastes back the final pytest summary line (`N passed in Xs`). A crash has no summary line; then paste the traceback.
+Use the project's own interpreter (its virtualenv, or the env that launches the app). Agents give a paste-ready command from the repo root. The four-tier chain is [Run order (fail-fast)](#run-order-fail-fast). The human pastes back the final pytest summary line (`N passed in Xs`). A crash has no summary line; then paste the traceback. Name which open PR merges first, and end with every open PR and what it is waiting on ([§ PR flow](#pr-flow)).
 
 ```bash
 .venv/bin/python -m pytest tests/unit -q
@@ -260,7 +262,7 @@ If a permission / multi-select **still times out** (old session started before t
 When finished:
 
 1. `git switch main && git pull --ff-only`.
-2. If the diff is worth keeping **and required tests are green** ([§ Tests](#tests)): branch off that `main`, commit (stage only this session’s files), squash-merge, delete the local branch and the remote branch. A detached worktree that dies is a folder, not a branch. A known pytest FAIL → fix it or discuss with the human; `Done` (hold) until then, not `Push Complete`.
+2. If [§ PR flow](#pr-flow) is at `hold: 3 open`, say that and do not open another PR. Otherwise, if the diff is worth keeping **and required tests are green** ([§ Tests](#tests)): branch off that `main`, commit (stage only this session’s files), squash-merge, delete the local branch and the remote branch. A detached worktree that dies is a folder, not a branch. A known pytest FAIL → fix it or discuss with the human; `Done` (hold) until then, not `Push Complete`.
 3. After merge: `grok worktree rm <id>` if this session used a managed worktree. Do not delete the primary checkout.
 4. Finish pass: `grok worktree list`, `git worktree list`, `git branch -vv`. A branch with no worktree and no open PR is trash. Idle worktrees count until removed.
 5. Last line: `Push Complete` when the PR is open or landed. Use `Done` only when work is finished locally and **not** pushed (abort / hold).
@@ -277,9 +279,19 @@ If the checkout has unique commits to keep: `git rebase main` in that folder (no
 
 Agent checklist: root [AGENTS.md](../AGENTS.md) § Parallel Session Rules.
 
+## PR flow
+
+Allen lock **2026-10-27**. For the assistant that opens and lands pull requests. PRs left open while newer merges land go stale and conflict.
+
+1. **WIP limit of 3.** Count open PRs that are not yet tested and merged. At 3, say `hold: 3 open` and start no new PR until one merges.
+2. **During a hold,** the user's new ideas go into [ToDo.md](ToDo.md) and ride along in the next PR. Do not start that work. Only a real bug found in a PR under test is added to that PR.
+3. **Every test command names which PR merges first,** so nothing builds on an unmerged PR.
+4. **24 hours untested.** Flag a PR that has sat untested for 24 hours (a nightly check is enough) so it gets tested, merged, or closed. Do not add GitHub Actions for this. CI stays dormant until [§ CI / pytest unfold](#ci--pytest-unfold-dormant-until-a-threshold).
+5. **Every test command ends with the open list:** one short plain-words line per open PR and what it is waiting on. Example: `#250 is waiting on your test. #236 is ready for you to say merge.` The human sees how many are open without asking.
+
 ## Handoff to human
 
-Short: what changed · files · how to verify · docs · branch landed and deleted · worktree removed if any.
+Short: what changed · files · how to verify · docs · branch landed and deleted · worktree removed if any. A test command follows [§ PR flow](#pr-flow).
 
 ## Solo / small team (keep light)
 

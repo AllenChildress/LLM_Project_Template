@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-28 — PR flow: three open, then hold
+
+- **Files:** `docs/PROCESS.md`, `AGENTS.md`, `tests/README.md`
+- **Why:** PRs left open while newer merges land go stale and conflict.
+- **What:** Allen's PR flow (adopted 2026-10-27), for any project from this template. WIP limit of 3: at three open untested PRs the assistant says `hold: 3 open` and starts no new PR. During a hold, new ideas go to `docs/ToDo.md` and ride in the next PR; only a real bug in a PR under test is added to that PR. Every test command names which PR merges first and ends with every open PR and what it is waiting on. A PR untested for 24 hours gets flagged (a nightly check is enough). No GitHub Actions.
+- **Benefit:** Improve maintainability
+
 ### 2026-10-25 — Tier meanings, and an empty tier does not stop the chain
 
 - **Files:** `docs/PROCESS.md`, `tests/README.md`, `AGENTS.md`, `docs/Glossary.md`, `docs/Coding_Standards.md`, `Project.md`, `tests/conftest.py`, `tests/smoke/`, `tests/integration/`, `scripts/run_tiers.py`, `scripts/README.md`, `tests/unit/test_run_tiers.py`
