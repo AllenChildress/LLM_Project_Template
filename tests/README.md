@@ -167,7 +167,7 @@ $env:QT_QPA_PLATFORM = "offscreen"
 .\.venv\Scripts\python.exe -m pytest tests/unit -q
 ```
 
-Agents give the human that full command. The human pastes back the **final pytest summary line** (`5 passed in 0.04s`). A crash has no summary line; then paste the traceback.
+Agents give the human that full command. Name which open PR merges first, and end with every open PR and what it is waiting on ([PROCESS § PR flow](../docs/PROCESS.md#pr-flow)). The human pastes back the **final pytest summary line** (`5 passed in 0.04s`). A crash has no summary line; then paste the traceback.
 
 One tier at a time. Exit 5 counts as pass here too. The fail-fast chain is [Run order (fail-fast)](#run-order-fail-fast).
 

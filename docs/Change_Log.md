@@ -44,6 +44,27 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-28 — Windows exe packaging and UI-miss lessons
+
+- **Files:** `docs/Lessons_Learned.md`
+- **Why:** Packaging a Windows executable, a second checkout, and a dead double-click were scars in one app. The kit had no portable rule, so the next app would repeat them.
+- **What:** Lessons_Learned gains a Windows executable packaging (PyInstaller) group: absolute packed paths, one Qt binding, a clean build venv, a scrubbed conda PATH, PySide6 Essentials, the user’s Windows machine as the real exe test, and exact tray icons. The long-run leak check cross-links PROCESS § Executable production. Tests build paths from `tmp_path`. A second checkout copies `.env`, uses absolute data and log paths, and logs them. Hover and click share a hit region, and every UI action including a miss is logged.
+- **Benefit:** Improve code hygiene / documentation
+
+### 2026-10-28 — Long-run leak check before an executable
+
+- **Files:** `docs/PROCESS.md`, `AGENTS.md`
+- **Why:** An app expected to run for days or weeks can leak memory that a short session never shows. That leak ships inside the executable.
+- **What:** PROCESS § Executable production. Before packaging that app: review common leak sources (per-refresh UI objects, remade timers and signals, unpruned caches, re-reading growing files, unclosed DB/HTTP/socket/child-process handles, day-rollover state, unrotated logs). An accelerated soak under `running_under_tests()` skips real waits, runs thousands of refresh cycles and many simulated day rollovers in seconds, and fails if `tracemalloc` or object counts keep climbing. The running app logs RSS at DEBUG about once an hour.
+- **Benefit:** Reliability / stability
+
+### 2026-10-28 — PR flow: three open, then hold
+
+- **Files:** `docs/PROCESS.md`, `AGENTS.md`, `tests/README.md`
+- **Why:** PRs left open while newer merges land go stale and conflict.
+- **What:** Allen's PR flow (adopted 2026-10-27), for any project from this template. WIP limit of 3: at three open untested PRs the assistant says `hold: 3 open` and starts no new PR. During a hold, new ideas go to `docs/ToDo.md` and ride in the next PR; only a real bug in a PR under test is added to that PR. Every test command names which PR merges first and ends with every open PR and what it is waiting on. A PR untested for 24 hours gets flagged (a nightly check is enough). No GitHub Actions.
+- **Benefit:** Improve maintainability
+
 ### 2026-10-25 — Tier meanings, and an empty tier does not stop the chain
 
 - **Files:** `docs/PROCESS.md`, `tests/README.md`, `AGENTS.md`, `docs/Glossary.md`, `docs/Coding_Standards.md`, `Project.md`, `tests/conftest.py`, `tests/smoke/`, `tests/integration/`, `scripts/run_tiers.py`, `scripts/README.md`, `tests/unit/test_run_tiers.py`

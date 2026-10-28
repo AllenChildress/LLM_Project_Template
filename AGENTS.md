@@ -17,7 +17,7 @@ Portable entry point. **Copy into each app** and replace the architecture paragr
 
 | When | Open |
 |------|------|
-| Process / commits | [docs/PROCESS.md](docs/PROCESS.md) |
+| Process / commits / PRs | [docs/PROCESS.md](docs/PROCESS.md) |
 | Judgment / leave it better | [docs/Taste.md](docs/Taste.md) |
 | Style / errors / size | [docs/Coding_Standards.md](docs/Coding_Standards.md) |
 | Backlog | [docs/ToDo.md](docs/ToDo.md) |
@@ -53,7 +53,7 @@ Skill owns commit shape, message style, and PR detail. This file owns when a wor
 - **Database changes are single-threaded.** Worktrees share one database when they copy the same `.env`. Before DDL, migrations, or store schema work: `git worktree list`. This session must be the **only topic worktree** (primary checkout on `main` may remain). If another worktree is in play, **stop** and tell the human. Do not migrate while another session can use the database.
 - Secrets: never commit `.env`, tokens, dumps, or local override configs.
 
-**Land (both cases):** `git switch main && git pull --ff-only`. If the diff is worth keeping **and required tests are green**: branch off that `main`, commit, squash-merge, delete the local branch and the remote branch. A known pytest FAIL does not land — fix it this session or discuss with the human. A detached worktree that dies is a folder, not a branch.
+**Land (both cases):** `git switch main && git pull --ff-only`. If the diff is worth keeping **and required tests are green**: branch off that `main`, commit, squash-merge, delete the local branch and the remote branch. A known pytest FAIL does not land — fix it this session or discuss with the human. At three open PRs not yet tested and merged, say `hold: 3 open` and do not open another ([docs/PROCESS.md](docs/PROCESS.md) § PR flow). A detached worktree that dies is a folder, not a branch.
 
 **After merge:** `grok worktree rm <id>`. Do not delete the primary checkout.
 
@@ -103,7 +103,9 @@ This session does the work. Nested `AGENTS.md` files are extra reading lists for
 | Testing past the kit stub? | If ≥25 unit tests, a suite runner, or the human asked for CI → **one** purple pick to unfold Stock_Data-style pytest (PROCESS § CI / pytest unfold). Do not unfold silently. |
 | **Leave the code better?** | Slice is as good or better (bugs, speed, clutter, reliability). Knowingly worse does not ship. [Taste.md](docs/Taste.md). |
 | **Known pytest FAIL?** | **Do not push. Do not merge.** Fix it this session, or stop and discuss with the human. Proven pre-existing: name who caused it this turn; they fix it or this session owns the fix. `SHORTFALL` / “unrelated” / “the other tier passed” are not waivers. [PROCESS.md](docs/PROCESS.md) § Tests. |
+| **Three open PRs?** | Say `hold: 3 open` and start no new PR until one merges. New ideas go to `docs/ToDo.md`. Every test command names which PR merges first and ends with every open PR and what it waits on. [PROCESS.md](docs/PROCESS.md) § PR flow. |
 | New / changed application code? | Cyclomatic complexity on touched functions — **CC ≤ 10** target, **CC > 15 too high** (PROCESS § Cyclomatic complexity) |
+| **Executable for a days-or-weeks run?** | Long-run leak check before the build: leak review, accelerated soak under `running_under_tests()`, hourly DEBUG RSS. [PROCESS.md](docs/PROCESS.md) § Executable production. |
 | Non-obvious fix? | Lessons_Learned |
 | Database / schema change? | Single-threaded: `git worktree list` — this session must be the only topic worktree, then migrate. |
 | **Hardcoded path, URL, file name, host, or port?** | **Stop.** Put it in `.env` / config or derive it. Allen does not authorize one-off literals. [Coding_Standards.md](docs/Coding_Standards.md) **Do not hardcode**. |
