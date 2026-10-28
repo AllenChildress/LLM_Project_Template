@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-28 — Windows exe packaging and UI-miss lessons
+
+- **Files:** `docs/Lessons_Learned.md`
+- **Why:** Packaging a Windows executable, a second checkout, and a dead double-click were scars in one app. The kit had no portable rule, so the next app would repeat them.
+- **What:** Lessons_Learned gains a Windows executable packaging (PyInstaller) group: absolute packed paths, one Qt binding, a clean build venv, a scrubbed conda PATH, PySide6 Essentials, the user’s Windows machine as the real exe test, and exact tray icons. The long-run leak check cross-links PROCESS § Executable production. Tests build paths from `tmp_path`. A second checkout copies `.env`, uses absolute data and log paths, and logs them. Hover and click share a hit region, and every UI action including a miss is logged.
+- **Benefit:** Improve code hygiene / documentation
+
 ### 2026-10-28 — Long-run leak check before an executable
 
 - **Files:** `docs/PROCESS.md`, `AGENTS.md`
