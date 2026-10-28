@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-28 — Long-run leak check before an executable
+
+- **Files:** `docs/PROCESS.md`, `AGENTS.md`
+- **Why:** An app expected to run for days or weeks can leak memory that a short session never shows. That leak ships inside the executable.
+- **What:** PROCESS § Executable production. Before packaging that app: review common leak sources (per-refresh UI objects, remade timers and signals, unpruned caches, re-reading growing files, unclosed DB/HTTP/socket/child-process handles, day-rollover state, unrotated logs). An accelerated soak under `running_under_tests()` skips real waits, runs thousands of refresh cycles and many simulated day rollovers in seconds, and fails if `tracemalloc` or object counts keep climbing. The running app logs RSS at DEBUG about once an hour.
+- **Benefit:** Reliability / stability
+
 ### 2026-10-28 — PR flow: three open, then hold
 
 - **Files:** `docs/PROCESS.md`, `AGENTS.md`, `tests/README.md`

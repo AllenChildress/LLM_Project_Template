@@ -105,6 +105,7 @@ This session does the work. Nested `AGENTS.md` files are extra reading lists for
 | **Known pytest FAIL?** | **Do not push. Do not merge.** Fix it this session, or stop and discuss with the human. Proven pre-existing: name who caused it this turn; they fix it or this session owns the fix. `SHORTFALL` / “unrelated” / “the other tier passed” are not waivers. [PROCESS.md](docs/PROCESS.md) § Tests. |
 | **Three open PRs?** | Say `hold: 3 open` and start no new PR until one merges. New ideas go to `docs/ToDo.md`. Every test command names which PR merges first and ends with every open PR and what it waits on. [PROCESS.md](docs/PROCESS.md) § PR flow. |
 | New / changed application code? | Cyclomatic complexity on touched functions — **CC ≤ 10** target, **CC > 15 too high** (PROCESS § Cyclomatic complexity) |
+| **Executable for a days-or-weeks run?** | Long-run leak check before the build: leak review, accelerated soak under `running_under_tests()`, hourly DEBUG RSS. [PROCESS.md](docs/PROCESS.md) § Executable production. |
 | Non-obvious fix? | Lessons_Learned |
 | Database / schema change? | Single-threaded: `git worktree list` — this session must be the only topic worktree, then migrate. |
 | **Hardcoded path, URL, file name, host, or port?** | **Stop.** Put it in `.env` / config or derive it. Allen does not authorize one-off literals. [Coding_Standards.md](docs/Coding_Standards.md) **Do not hardcode**. |

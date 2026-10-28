@@ -186,6 +186,21 @@ When a slice of application code is done, score **touched functions** (McCabe). 
 
 Uncle Bob (Matt Pocock 2026-08-19) ran a **Complexity Score** (complexity × coverage) first on agent output — human **< 4**, agents **6–8**. A Tech Debt / hotspot table (CC × churn) is the cousin you can ship before coverage is in the loop. Do not invent a second formula.
 
+## Executable production
+
+When the app is packaged as an executable (or any other release build), an app expected to run for days or weeks needs a **long-run leak check** before that build ships. A short session will not show the leak.
+
+1. **Code review** for common leak sources:
+   - UI objects created per refresh and never freed
+   - Timers and signal connections remade each cycle
+   - Caches or lists that grow without pruning
+   - Re-reading a growing file instead of tailing from an offset
+   - DB, HTTP, socket, or child-process handles not closed
+   - Day-rollover state not released
+   - Unrotated logs
+2. **Accelerated soak.** A regression test that runs under `running_under_tests()`, skips real waits, and drives thousands of refresh cycles and many simulated day rollovers in seconds. It fails if memory (`tracemalloc`, or object counts) keeps climbing instead of leveling off.
+3. **Hourly RSS.** The running app logs its memory use (RSS) at DEBUG about once an hour, so a real multi-day run can confirm growth flattened.
+
 ## Migrations / schema (if DB included)
 
 - Versioned SQL or migration tool of choice.
