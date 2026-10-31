@@ -29,6 +29,9 @@ Thumbs.db
 *.sql.gz
 *.dump
 
+# Test-run output (last run plus 2 days of dated copies)
+/logs/
+
 # Local overrides
 *.local.json
 *.local.yaml

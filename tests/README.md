@@ -167,7 +167,7 @@ $env:QT_QPA_PLATFORM = "offscreen"
 .\.venv\Scripts\python.exe -m pytest tests/unit -q
 ```
 
-Agents give the human that full command. Name which open PR merges first, and end with every open PR and what it is waiting on ([PROCESS § PR flow](../docs/PROCESS.md#pr-flow)). The human pastes back the **final pytest summary line** (`5 passed in 0.04s`). A crash has no summary line; then paste the traceback.
+The agent runs the full chain on the human's machine and reads the saved file ([PROCESS § Saved test output](../docs/PROCESS.md#saved-test-output-agent-runs-it)). It reports **FAIL** or pass first, then the counts, the `.env` line, and each failure by file and name. The human does the in-app checks. Name which open PR merges first, and end with every open PR and what it is waiting on ([PROCESS § PR flow](../docs/PROCESS.md#pr-flow)).
 
 One tier at a time. Exit 5 counts as pass here too. The fail-fast chain is [Run order (fail-fast)](#run-order-fail-fast).
 

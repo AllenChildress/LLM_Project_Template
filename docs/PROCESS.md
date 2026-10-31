@@ -109,7 +109,9 @@ Top-level test windows open maximized, on one screen: the primary screen, or the
 
 ### Running
 
-Use the project's own interpreter (its virtualenv, or the env that launches the app). Agents give a paste-ready command from the repo root. The four-tier chain is [Run order (fail-fast)](#run-order-fail-fast). The human pastes back the final pytest summary line (`N passed in Xs`). A crash has no summary line; then paste the traceback. Name which open PR merges first, and end with every open PR and what it is waiting on ([§ PR flow](#pr-flow)).
+Use the project's own interpreter (its virtualenv, or the env that launches the app). The four-tier chain is [Run order (fail-fast)](#run-order-fail-fast). The agent runs that chain on the human's machine, reads the saved file, and reports the result ([Saved test output (agent runs it)](#saved-test-output-agent-runs-it)). The human does the in-app checks. Name which open PR merges first, and end with every open PR and what it is waiting on ([§ PR flow](#pr-flow)).
+
+One tier, when that is all this run needs:
 
 ```bash
 .venv/bin/python -m pytest tests/unit -q
@@ -118,6 +120,40 @@ Use the project's own interpreter (its virtualenv, or the env that launches the 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests/unit -q
 ```
+
+### Saved test output (agent runs it)
+
+The agent runs the suite on the human's machine and reads the saved file. `logs/` is gitignored.
+
+| File | Role |
+|------|------|
+| `logs\last_test_run.txt` | Latest run. Overwritten each time. |
+| `logs\test_run_YYYYMMDD_HHMM_<tag>.txt` | Dated copy of that same run. |
+
+`<tag>` comes from the current branch, in this order: `main` when the branch is `main`; otherwise `PR<n>` when `git config branch.<name>.pr-number` is set (`<n>` is that value); otherwise the branch name, with `\` and `/` replaced by `-`.
+
+Delete only `test_run_*.txt` files older than 2 days. Leave `logs\last_test_run.txt` and anything else under `logs/`.
+
+Hash `.env` before the run and again after it. The last line of the saved file is `ENV UNCHANGED` when the hashes match, and `ENV CHANGED - tell the agent` when they do not (or when the file appears or disappears). No `.env` file hashes as `none` on both sides, which is unchanged.
+
+From the repo root (PowerShell):
+
+```powershell
+$stamp = Get-Date -Format 'yyyyMMdd_HHmm'
+$branch = git rev-parse --abbrev-ref HEAD
+$n = git config --get "branch.$branch.pr-number"
+$tag = if ($branch -eq 'main') { 'main' } elseif ($n) { "PR$n" } else { $branch -replace '[\\/]', '-' }
+New-Item -ItemType Directory -Force logs | Out-Null
+$before = if (Test-Path .env) { (Get-FileHash .env).Hash } else { 'none' }
+.\.venv\Scripts\python.exe scripts\run_tiers.py tests/unit tests/smoke tests/integration tests/regression 2>&1 | Tee-Object logs\last_test_run.txt
+$after = if (Test-Path .env) { (Get-FileHash .env).Hash } else { 'none' }
+$envLine = if ($before -eq $after) { 'ENV UNCHANGED' } else { 'ENV CHANGED - tell the agent' }
+$envLine | Tee-Object logs\last_test_run.txt -Append
+Copy-Item logs\last_test_run.txt "logs\test_run_${stamp}_$tag.txt"
+Get-ChildItem logs\test_run_*.txt | Where-Object LastWriteTime -lt (Get-Date).AddDays(-2) | Remove-Item
+```
+
+**Report.** First line is **FAIL** or pass. Then the pass and fail counts for each tier, and which tier stopped the run. Then the `.env` line. Then each failed test by file and name. The human only does the in-app checks.
 
 ### Comments
 

@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-10-30 — Agent runs the suite and reads the saved file
+
+- **Files:** `docs/PROCESS.md`, `AGENTS.md`, `tests/README.md`, `.gitignore`
+- **Why:** The human was pasting the pytest summary back. The agent can run the suite on the human's machine and read the file.
+- **What:** PROCESS § Saved test output. The agent runs the four-tier chain, writes `logs\last_test_run.txt` and a dated copy (`PR<n>`, `main`, or the branch name), hashes `.env`, and reports **FAIL** or pass, counts per tier, which tier stopped the run, the `.env` line, and each failure by file and name. Dated copies older than 2 days are deleted. `logs/` is gitignored. The human does the in-app checks.
+- **Benefit:** Save user time / workflow speed
+
 ### 2026-10-28 — Windows exe packaging and UI-miss lessons
 
 - **Files:** `docs/Lessons_Learned.md`
