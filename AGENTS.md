@@ -82,6 +82,10 @@ Full write-up: [docs/PROCESS.md](docs/PROCESS.md) § Parallel sessions.
 
 This session does the work. Nested `AGENTS.md` files are extra reading lists for that folder. Replies start with the answer. No role label on the first line (`main:`, `dba:`, `ui:`, or any other).
 
+Before the final report, review the change as a principal engineer and technical architect would, judging it against the time and scope available. Ask what root cause, design flaw, missed edge case, or standards gap they would flag that the user did not ask about. Fix each finding that fits inside the ask. List bigger redesigns, new abstractions, or cross-system ideas as separate recommendations with a rough size, and do not build them. List only findings you would genuinely stand behind; do not pad the list. Scale the review to the change: for trivial docs or config edits, a one-line 'no findings' is enough. Prefer the simplest solution that fully meets the standards; add abstraction only when this change needs it now.
+
+In the final reply, include step-back review findings: fixed, and recommended-but-not-built (with rough size).
+
 ## Always-on checklist
 
 | Question | Action |
