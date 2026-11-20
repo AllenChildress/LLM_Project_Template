@@ -44,6 +44,13 @@ Newest real UI steps, oldest last. Same image may also appear on the dated **Sho
 
 ## Entries (newest first)
 
+### 2026-11-20 00:38 CST — Portable reliability rules in Coding_Standards
+
+- **Files:** `docs/Coding_Standards.md`, `docs/Lessons_Learned.md`, `docs/Change_Log.md`
+- **Why:** Agents and new apps repeat the same failure modes: wrong business dates after midnight, UI crashes on refresh, “success” with no durable write, and unprovable API rejections.
+- **What:** Coding_Standards adds language-neutral locks for business-clock time, UI state by stable domain keys, done-only-when-saved-and-verified, and paired request/response logging on external failures. Also documents **Tests are hermetic** and **Heavy work stays off the UI thread** where missing. Lessons_Learned points at the new section.
+- **Benefit:** Improve maintainability / Tests / regression prevention
+
 ### 2026-10-30 — Agent runs the suite and reads the saved file
 
 - **Files:** `docs/PROCESS.md`, `AGENTS.md`, `tests/README.md`, `.gitignore`

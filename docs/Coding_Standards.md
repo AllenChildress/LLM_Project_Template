@@ -401,6 +401,50 @@ When wrapping **Schwab**, Postgres drivers, HTTP clients, or any remote service:
 4. Caller logs `exc` and `getattr(exc, "hint", None)`; UI status/dialog can show both.
 
 
+## Portable reliability (language-neutral)
+
+Locks that apply in any stack. App-specific paint and broker rules stay in that app’s standards.
+
+### Use the business clock, not the machine's
+
+| Do | Don't |
+|----|--------|
+| Store instants as **zone-aware UTC** in persistence and interchange | Persist naive local datetimes or strings with an implicit local offset |
+| Derive **business dates** (trading or business day, session, settlement, dates sent to an external API) from **one shared helper** in the business or exchange time zone | Use the OS or language “now” on the local machine and truncate to a calendar date for business logic |
+
+**Why:** A machine in another time zone sends “yesterday” for part of every night, and the failure only shows up at night.
+
+### Hold UI state by stable identity
+
+| Do | Don't |
+|----|--------|
+| Remember selection, expansion, or focus by a **domain key** (id, stable path, natural key) | Store selection as a reference to a view or framework object that may be destroyed and recreated |
+| Re-resolve keys to fresh view objects on each paint or refresh | Assume the same object instance survives a model reload |
+
+**Why:** Stale handles crash on the next refresh.
+
+### Done means saved and verified
+
+| Do | Don't |
+|----|--------|
+| Mark a job **done** only after its result is **durably stored** and a read-back or invariant check succeeds | Treat cancelled, preempted, or timed-out work as done |
+| **Retry** incomplete or failed writes on the next scheduler tick or user action | Infer success from in-memory computation or from a UI that still shows old data |
+| Monitor **stored-data freshness** (timestamps, row counts, checksums) | Monitor only what the screen shows |
+
+**Why:** A UI that computes in memory can look right while writes have silently stopped.
+
+### Make external failures diagnosable
+
+Complements **External API / network call errors** above (status, vendor detail, hints). This rule is about **pairing** evidence:
+
+| Do | Don't |
+|----|--------|
+| When an external system rejects a request, record the **exact request** (minus secrets) **next to** the response (status, body, codes) | Log only “request failed” or a paraphrased error |
+| Use one redaction path for logs, audit storage, and user-visible messages | Drop parameters that differ between a good call and a bad one |
+
+**Why:** It lets you prove the cause by comparing a good call to a bad one instead of guessing.
+
+
 ## Boot-up and environment (try / catch, portable machines)
 
 Boot paths run **before** the product is usable: interpreter choice, `.env`, Qt plugins, Postgres connect, Schwab tokens, schema ensure, SQL log handler, WebEngine process path. They fail differently on every machine (wrong conda env, IDE-polluted `QT_*`, missing `qwindows`, DB down, no tokens).
@@ -467,6 +511,16 @@ Give the user time to finish a gesture before firing expensive work (chart reloa
 
 The paint / mouse thread never runs date searches, hole scans, or store/SQL. It reads domain objects and DataFrames already in memory. Workers populate those objects. A presenter may **submit** work and **apply** the result.
 
+### Heavy work stays off the UI thread
+
+| Do | Don't |
+|----|--------|
+| Run network I/O, large file reads, heavy CPU, and database work on **worker** threads or async tasks; **apply** results on the UI thread | Block the UI thread on multi-second work while the user waits |
+| Show busy/wait chrome while the UI thread waits for a worker result | Let the UI look frozen with no feedback |
+| Marshal callbacks onto the UI thread with the framework’s queued-invoke pattern | Touch widgets or UI timers from a worker thread |
+
+**Why:** A blocked UI thread freezes input and paint; users assume the app crashed.
+
 | Layer | Job |
 |-------|-----|
 | **Model** | Persist and retrieve rows. SQL in files. |
@@ -522,6 +576,15 @@ See also shim-removal items in [ToDo.md](ToDo.md).
 | **Harness** | `scripts/testing/run_smoke_suite.py` | Thin pytest facade (`--tier` → paths); no business logic. |
 
 **Rules:** New tests go under `tests/{unit,smoke,integration,regression}/` as `test_*.py` with `test_*` functions. Run in that order and stop on the first failing tier. Pytest exit 5 (no tests collected) counts as pass. Path auto-marks the bucket in [tests/conftest.py](../tests/conftest.py). Config/markers: [pyproject.toml](../pyproject.toml).
+
+### Tests are hermetic
+
+| Do | Don't |
+|----|--------|
+| Use fixtures, fakes, stubs, and local or in-memory services in `tests/{unit,smoke,integration,regression}/` | Depend on live production data, real secrets, or the public internet in committed tests |
+| Keep opt-in probes and experiments under `scripts/experiments/` (local, not required for merge) | Make the default tier chain flaky because an external vendor is down |
+
+**Why:** External systems and shared environments make tests non-reproducible and hide real regressions behind noise.
 
 **Hierarchy compliance (required):** Maintain pytest as the canonical test hierarchy. `tests/unit`, `tests/smoke`, `tests/integration`, and `tests/regression` are the durable homes for committed behavior checks. Keep names/markers pytest-compliant and keep test intent aligned with the bucket (unit = function in, outputs match; smoke = key components work, early warning; integration = happy path from the start; regression = edge cases).
 
