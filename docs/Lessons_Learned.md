@@ -31,6 +31,7 @@ Durable scars. Prefer **short rules** over novels.
 - SQL as app string literals ages badly (one-liners too) — put statements in `.sql` files and load them by name (Coding_Standards).
 - Prefer names that match the job (`db_report`, inventory). “Health” and similar borrowed words confuse readers when the domain is not medical.
 - **Why Coding_Standards is long:** many entries exist because **Grok Build did not do them by default**, and other LLMs often will not either. Treat the standards file as the forced checklist for agents — do not assume the model already “knows” Rule of Three, SQL-in-files, 500-line caps, or cohesion pairs.
+- **Portable reliability locks (2026-11-20).** Night-only timezone skew, stale UI object handles, jobs marked done before durable write, and opaque API failures are cheaper to prevent than to debug. See Coding_Standards **Portable reliability (language-neutral)** (business clock, stable UI identity, saved-and-verified jobs, paired request/response on failure), plus **Tests are hermetic** and **Heavy work stays off the UI thread**.
 
 ## Domain / product
 
